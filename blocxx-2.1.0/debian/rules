@@ -1,5 +1,4 @@
 #!/usr/bin/make -f
-# Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
 
 AM_VERSION=-1.9
@@ -10,8 +9,20 @@ export LIBTOOLIZE = true
 %:
 	dh $@ --with autoreconf,autotools-dev
 
+override_dh_autoreconf:
+	rm -rf  autom4te.cache \
+		blocxx_header_test_file.h \
+		config.cache \
+		config.guess \
+		config.log \
+		config.sub \
+		depcomp \
+		missing \
+		mkinstalldirs \
+		test/unit/set_test_libpath.sh
+	dh_autoreconf
+
 override_dh_auto_configure:
-	# activate some special configure-options
 	dh_auto_configure -- \
 		--enable-64-bit-build \
 		--enable-iconv \
@@ -21,13 +32,20 @@ override_dh_auto_configure:
 
 override_dh_auto_clean:
 	dh_auto_clean
-	# remove files which are left over by make dist-clean
-	rm -f ./blocxx_header_test_file.h ./config.log
+	rm -rf	autom4te.cache \
+		blocxx_header_test_file.h \
+		config.cache \
+		config.guess \
+		config.log \
+		config.sub \
+		depcomp \
+		missing \
+		mkinstalldirs \
+		test/unit/set_test_libpath.sh
 
 override_dh_autotools-dev_restoreconfig:
 	dh_autotools-dev_restoreconfig
-	# remove backup-files
-	rm -f ./*.dh-orig
+	rm -f	*.dh-orig
 
 override_dh_strip:
 	dh_strip --dbg-package=libblocxx-dbg
