@@ -21,7 +21,7 @@ Homepage: http://blocxx.sf.net/
 Package: libblocxx-dev
 Section: libdevel
 Architecture: any
-Depends: libblocxx6 (= ${binary:Version}),
+Depends: libblocxx8 (= ${binary:Version}),
          ${misc:Depends}
 Description: BloCXX development libraries, header files and documentation
  BloCxx is a cross-platform, general purpose C++ framework for application
@@ -34,7 +34,7 @@ Package: libblocxx-dbg
 Section: debug
 Architecture: any
 Depends: libblocxx-dev (= ${binary:Version}),
-         libblocxx6 (= ${binary:Version}),
+         libblocxx8 (= ${binary:Version}),
          ${misc:Depends}
 Description: BloCXX debugging symbols
  BloCxx is a cross-platform, general purpose C++ framework for application
@@ -43,7 +43,7 @@ Description: BloCXX debugging symbols
  .
  This package contains the BloCXX debugging symbols.
 
-Package: libblocxx6
+Package: libblocxx8
 Architecture: any
 Depends: ${misc:Depends},
          ${shlibs:Depends}
