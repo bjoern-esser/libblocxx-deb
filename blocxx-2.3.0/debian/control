@@ -13,7 +13,7 @@ Build-Depends: automake1.9,
                mawk,
                mime-support,
                pkg-config
-Standards-Version: 3.9.2
+Standards-Version: 3.9.3
 Section: libs
 Homepage: http://blocxx.sf.net/
 
