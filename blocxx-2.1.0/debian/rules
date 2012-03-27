@@ -10,7 +10,8 @@ export LIBTOOLIZE = true
 	dh $@ --with autoreconf,autotools-dev
 
 override_dh_autoreconf:
-	rm -rf  autom4te.cache \
+	rm -rf	aclocal.m4 \
+		autom4te.cache \
 		blocxx_header_test_file.h \
 		config.cache \
 		config.guess \
@@ -32,7 +33,8 @@ override_dh_auto_configure:
 
 override_dh_auto_clean:
 	dh_auto_clean
-	rm -rf	autom4te.cache \
+	rm -rf	aclocal.m4 \
+		autom4te.cache \
 		blocxx_header_test_file.h \
 		config.cache \
 		config.guess \
