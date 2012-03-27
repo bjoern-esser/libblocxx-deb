@@ -1,0 +1,5 @@
+libblocxx (2.3.0~svn544-1) unstable; urgency=low
+
+  * Initial release (Closes: #647639)
+
+ -- Björn Esser <bjoern.esser@googlemail.com>  Tue, 27 Mar 2012 00:00:00 +0200
