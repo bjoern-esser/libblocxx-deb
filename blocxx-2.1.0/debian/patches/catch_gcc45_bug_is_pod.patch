@@ -1,0 +1,23 @@
+From: Marius Tomaschewski <mt@suse.com>
+Subject: fix build on GCC 4.5+
+
+* configure.in: add struct strPOD.
+
+Origin: upstream, https://api.opensuse.org/public/source/openSUSE:Factory/blocxx/blocxx-2.1.0-catch-gcc45-bug_is_pod.diff?rev=1659906e4d6e276a8c7ee6ceefe976eb&
+--- a/configure.in
++++ b/configure.in
+@@ -869,6 +869,14 @@
+ 
+ BLOCXX_STATIC_ASSERT(std::tr1::is_pod<POD>::value == true);
+ 
++struct strPOD
++{
++        const char * const foo;
++        const char * const bar;
++};
++
++BLOCXX_STATIC_ASSERT(std::tr1::is_pod<strPOD>::value == true);
++
+ class nonPOD
+ {
+ private:

@@ -1,0 +1,25 @@
+From: Sascha Peilicke <SPeilicke@suse.com>
+Subject: include cstddef and use std::ptrdiff_t
+
+* src/blocxx/Enumeration.hpp: include cstddef and use std::ptrdiff_t
+
+Origin: upstream, https://api.opensuse.org/public/source/openSUSE:Factory/blocxx/blocxx-2.1.0-std-ptrdiff.diff?rev=1659906e4d6e276a8c7ee6ceefe976eb&
+--- a/src/blocxx/Enumeration.hpp
++++ b/src/blocxx/Enumeration.hpp
+@@ -41,6 +41,7 @@
+ #include "blocxx/TempFileEnumerationImplBase.hpp"
+ #include "blocxx/IntrusiveReference.hpp"
+ 
++#include <cstddef>  // std::ptrdiff_t
+ #include <iterator> // for the iterator tags
+ 
+ namespace BLOCXX_NAMESPACE
+@@ -130,7 +131,7 @@
+ 	typedef T value_type;
+ 	typedef const T* pointer;
+ 	typedef const T& reference;
+-	typedef ptrdiff_t difference_type;
++	typedef std::ptrdiff_t difference_type;
+ 	Enumeration_input_iterator() : m_enumeration(0), m_ok(false)
+ 	{
+ 	}

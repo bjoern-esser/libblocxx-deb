@@ -1,0 +1,49 @@
+From: Björn Esser <bjoern.esser@googlemail.com>
+Subject: fix suggest parentheses compiler-warnings
+ Condition.cpp: In function ‘bool blocxx6::{anonymous}::timespec_less(const timespec&, const timespec&)’:
+ Condition.cpp:110:42: warning: suggest parentheses around ‘&&’ within ‘||’ [-Wparentheses]
+ PosixExec.cpp: In function ‘void blocxx6::{anonymous}::close_on_exec(blocxx6::Descriptor, bool)’:
+ PosixExec.cpp:130:42: warning: suggest parentheses around ‘&&’ within ‘||’ [-Wparentheses]
+ PosixPathSecurity.cpp: In function ‘blocxx6::EFileStatusReturn blocxx6::file_ok(const stat&, uid_t, bool)’:
+ PosixPathSecurity.cpp:77:109: warning: suggest parentheses around ‘&&’ within ‘||’ [-Wparentheses]
+
+* src/blocxx/Condition.cpp
+* src/blocxx/PosixExec.cpp
+* src/blocxx/PosixPathSecurity.cpp
+
+Origin: upstream, http://blocxx.svn.sourceforge.net/viewvc/blocxx/branches/BRANCH_2_2_0/src/blocxx/?pathrev=474
+--- a/src/blocxx/Condition.cpp
++++ b/src/blocxx/Condition.cpp
+@@ -106,8 +106,8 @@
+ 	inline 
+ 	bool timespec_less(struct timespec const & x, struct timespec const & y)
+ 	{
+-		return x.tv_sec < y.tv_sec ||
+-			x.tv_sec == y.tv_sec && x.tv_nsec < y.tv_nsec;
++			return (x.tv_sec < y.tv_sec) ||
++			((x.tv_sec == y.tv_sec) && (x.tv_nsec < y.tv_nsec));
+ 	}
+ 
+ 	int check_timedwait(
+--- a/src/blocxx/PosixExec.cpp
++++ b/src/blocxx/PosixExec.cpp
+@@ -127,7 +127,7 @@
+ 	void close_on_exec(Descriptor descr, bool may_be_bad)
+ 	{
+ 		int e = ::fcntl(descr, F_SETFD, FD_CLOEXEC);
+-		check(e == 0 || may_be_bad && errno == EBADF, "fcntl");
++		check((e == 0) || (may_be_bad && errno == EBADF), "fcntl");
+ 	}
+ 
+ 	void handle_child_error(int rc, Exec::PreExec::Error const & ce, Process & proc, const String& process_path)
+--- a/src/blocxx/PosixPathSecurity.cpp
++++ b/src/blocxx/PosixPathSecurity.cpp
+@@ -74,7 +74,7 @@
+ #endif
+  			 x.st_uid == uid)
+  		{
+- 			if (!(S_ISLNK(x.st_mode) || check_grp_oth(x) || S_ISDIR(x.st_mode) && !full_path && (x.st_mode & S_ISVTX)))
++ 			if (!(S_ISLNK(x.st_mode) || check_grp_oth(x) || (S_ISDIR(x.st_mode) && !full_path && (x.st_mode & S_ISVTX))))
+  			{
+  				retval = E_FILE_BAD_OTHER;
+  			}

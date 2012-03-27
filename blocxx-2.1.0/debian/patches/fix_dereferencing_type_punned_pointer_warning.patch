@@ -1,0 +1,32 @@
+From: Björn Esser <bjoern.esser@googlemail.com>
+Subject: fix dereferencing type-punned pointer compiler-warnings
+ DescriptorUtils_noexcept.cpp: In function ‘int blocxx6::passDescriptor(blocxx6::Descriptor, blocxx6::Descriptor, blocxx6::ProcId)’:
+ DescriptorUtils_noexcept.cpp:213:45: warning: dereferencing type-punned pointer will break strict-aliasing rules [-Wstrict-aliasing]
+ DescriptorUtils_noexcept.cpp: In function ‘blocxx6::AutoDescriptor blocxx6::receiveDescriptor(blocxx6::Descriptor, char*, size_t)’:
+ DescriptorUtils_noexcept.cpp:319:67: warning: dereferencing type-punned pointer will break strict-aliasing rules [-Wstrict-aliasing]
+ 
+* src/blocxx/DescriptorUtils_noexcept.cpp
+
+Origin: upstream, http://blocxx.svn.sourceforge.net/viewvc/blocxx/branches/BRANCH_2_2_0/src/blocxx/?pathrev=474
+--- a/src/blocxx/DescriptorUtils_noexcept.cpp
++++ b/src/blocxx/DescriptorUtils_noexcept.cpp
+@@ -210,7 +210,8 @@
+ 	cmptr->cmsg_len = CMSG_LEN(sizeof(int));
+ 	cmptr->cmsg_level = SOL_SOCKET;
+ 	cmptr->cmsg_type = SCM_RIGHTS;
+-	*(reinterpret_cast<int *>(CMSG_DATA(cmptr))) = descriptor;
++	int* ptr = reinterpret_cast<int *>(CMSG_DATA(cmptr));
++	*ptr = descriptor;
+ #else
+ 
+ #ifdef BLOCXX_NCR
+@@ -316,7 +317,8 @@
+ 		return copy_error(errbuf, bufsz,
+ 			"control type != SCM_RIGHTS when receiving handle");
+ 	}
+-	return AutoDescriptor(*(reinterpret_cast<int *>(CMSG_DATA(cmptr))));
++	int* ptr = reinterpret_cast<int *>(CMSG_DATA(cmptr));
++	return AutoDescriptor(*ptr);
+ #else
+ 	if (msg.msg_accrightslen != sizeof(int))
+ 	{

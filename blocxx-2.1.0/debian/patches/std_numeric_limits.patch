@@ -1,0 +1,14 @@
+From: Björn Esser <bjoern.esser@googlemail.com>
+Subject: include limits to use std::numeric_limits for debugging.
+
+* src/blocxx/PosixExec.cpp: include limits to use std::numeric_limits
+--- a/src/blocxx/PosixExec.cpp
++++ b/src/blocxx/PosixExec.cpp
+@@ -47,6 +47,7 @@
+ #include "blocxx/Paths.hpp"
+ #include "blocxx/TimeoutTimer.hpp"
+ #include "blocxx/Select.hpp"
++#include <limits>
+ 
+ extern "C"
+ {

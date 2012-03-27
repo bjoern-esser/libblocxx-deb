@@ -1,0 +1,32 @@
+From: unknown
+Subject: add pkgconfig template-file and generate a pkgconfig-file during configure
+
+* blocxx.pc.in: add pkgconfig template
+* configure.in: generate pkgconfig-file
+
+Origin: upstream, https://api.opensuse.org/public/source/openSUSE:Factory/blocxx/blocxx-pkgconfig.diff?rev=1659906e4d6e276a8c7ee6ceefe976eb&
+--- /dev/null
++++ b/blocxx.pc.in
+@@ -0,0 +1,12 @@
++prefix=@prefix@
++exec_prefix=@exec_prefix@
++bindir=@bindir@
++libdir=@libdir@
++includedir=@includedir@
++
++Name: BloCxx
++Version: 2.1.0
++Description: BloCxx - A general C++ framework for application development.
++Cflags: -I${includedir}
++Libs: -L${libdir} -lblocxx
++Requires:  openssl libpcre
+--- a/configure.in
++++ b/configure.in
+@@ -2069,6 +2069,7 @@
+ examples/iconv/Makefile
+ doc/Makefile
+ Doxyfile
++blocxx.pc
+ )
+ 
+ dnl Create a sed script to replace all of the substituted variables.
