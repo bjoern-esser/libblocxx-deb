@@ -1,0 +1,44 @@
+BLOCXXPREFIX = /usr/local/blocxx
+
+BLOCXXINCDIR = $(BLOCXXPREFIX)/include
+BLOCXXLIBDIR = $(BLOCXXPREFIX)/lib
+
+SONAME = libdummylib.so
+LIBNAME = libdummylib.so.0.0.1
+TARGET = $(SONAME)
+
+ifdef (DEBUG)
+DEBUGFLAGS = -g -DDEBUG
+else
+DEBUGFLAGS =
+endif
+
+DEFS = -D_REENTRANT 
+LIBS = -lpthread -L$(BLOCXXLIBDIR) -lopenwbem 
+
+INCLUDES = -I$(BLOCXXINCDIR)
+CXX = g++
+CXXFLAGS = $(DEBUGFLAGS) $(INCLUDES) $(DEFS) -Werror -Wall -fPIC
+
+SRCS = \
+derivedDummyLib.cpp dummyLib.cpp
+
+OBJS = $(addsuffix .o, $(basename $(SRCS)))
+
+$(TARGET): $(LIBNAME) $(OBJS)
+	@if test ! -e `pwd`/$(SONAME); then \
+		ln -s `pwd`/$(LIBNAME) `pwd`/$(SONAME); \
+	fi
+
+$(LIBNAME): $(OBJS)
+	$(CXX) -shared -Wl,-soname,$(SONAME) -o $(LIBNAME) $(OBJS)
+
+$(OBJS): %.o: %.cpp
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+clean:
+	@rm -f $(TARGET) &> /dev/null
+	@rm -f $(LIBNAME) &> /dev/null
+	@rm -f $(OBJS) &> /dev/null
+
+

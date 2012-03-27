@@ -1,0 +1,114 @@
+BloCxx Installation Instructions
+   Hopefully there is enough information in this file to get you going.
+   There should be more/better documentation comming soon ;-)
+-------------------------------------------------------------------------------
+
+CONTENTS
+
+   1.0 - Requirements
+
+   2.0 - Installing from a distribution.
+   
+   3.0 - Installing from CVS check-out
+ 
+-------------------------------------------------------------------------------
+1.0 Requirements
+
+   In order to build BloCxx you will need the following components installed
+   on your system:
+   
+      gcc - (required)
+         Version 2.95.2 or higher
+            2.96 provided by RedHat is seriously broken and mis-compiles OW.
+            3.0.x has a bug in the standard library which prevents OW from 
+                working correctly.
+         (see http://www.gnu.org).
+
+      OpenSSL library - (optional)
+         If you want the CIMOM to provide HTTPS access
+         (see http://www.openssl.org).
+
+-------------------------------------------------------------------------------
+2.0 - Installing from a distribution.
+
+   If you acquired the BloCxx software as a distribution, you have a file
+   that should look like the following:
+   
+      blocxx-[Major Version].[Minor Version].[Revision].tar.gz
+      
+   For the sake of discussion, let's say we have a distribution with the file
+   name blocxx-1.0.1.tar.gz that currently resides in the ~/downloads 
+   directory. This file contains BloCxx version 1.0.1.
+   
+   The first thing you want to do, is extract the contents of this file into
+   any directory you desire. We'll assume for now that is /usr/local. The
+   following commands should get the distribution properly extracted into
+   the /usr/local directory:
+   
+      cd /usr/local
+      tar zxvf ~/downloads/blocxx-1.0.1.tar.gz
+      
+   After this is done, you should have a /usr/local/blocxx-1.0.1 directory.
+   Now type in the following commands:
+   
+      cd /usr/local/blocxx-1.0.1
+      ./configure
+      make
+      su root
+      make install
+      
+
+   That's it! You should now have BloCxx installed on your system.
+   
+   Note:
+      The configure command automatically detects various aspects of your
+      system and builds BloCxx accordingly. If you don't like the
+      default options that configure chooses on it's own, type
+      configure --help at the shell prompt to see the plethora of options
+      available to you.
+
+      Following is a list of some of the non-standard configure options
+      supported in the BloCxx build process:
+
+         --with-search-dir=<path to additional include files>
+            Use this option if you have some header files that reside in
+            a location that cannot be found by the standard BloCxx build
+            process.
+
+         --with-ssl-dir=<path to OpenSSL header files>
+            Use this option if the header files for OpenSSL are located
+            in a location that cannot be found by the standard BloCxx
+            build process.
+      
+-------------------------------------------------------------------------------
+3.0 Installing from CVS check-out
+
+   If you acquired BloCxx from the CVS repository at our web site, there
+   should be a shell script in the root directory of the source tree called
+   cvsbootstrap.sh. The easiest way to get the build process going is to
+   do the following:
+   
+      cd /[root directory of the BloCxx source tree]
+      ./cvsbootstrap.sh
+      ./configure
+      make
+      make install
+
+   Note:
+      If you have any compile or link problems during the make process, try
+      doing a "make clean" after the ./configure command.
+      
+   I prefer to do the above process slightly differently:
+   
+      cd /[root directory of the BloCxx source tree]
+      mkdir build
+      ./cvsbootstrap.sh
+      cd build
+      ../configure
+      make
+      make install
+      
+   This will actually place all of the output from the make process in
+   directories relative to the build directory as opposed to putting all of
+   the object files and libraries in the same directories as the source files.
+   
