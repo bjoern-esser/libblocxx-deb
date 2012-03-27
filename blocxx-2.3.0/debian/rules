@@ -1,0 +1,52 @@
+#!/usr/bin/make -f
+#export DH_VERBOSE=1
+
+export LIBTOOLIZE = true
+
+%:
+	dh $@ --with autoreconf,autotools-dev
+
+override_dh_autoreconf:
+	rm -rf	aclocal.m4 \
+		autom4te.cache \
+		blocxx_header_test_file.h \
+		config.cache \
+		config.guess \
+		config.log \
+		config.sub \
+		depcomp \
+		missing \
+		mkinstalldirs \
+		test/unit/set_test_libpath.sh
+	dh_autoreconf
+
+override_dh_auto_configure:
+	dh_auto_configure -- \
+		--enable-64-bit-build \
+		--enable-c++0x \
+		--enable-debug-mode \
+		--enable-stack-trace \
+		--enable-iconv \
+		--enable-ipv6 \
+		--enable-pcre
+
+override_dh_auto_clean:
+	dh_auto_clean
+	rm -rf	aclocal.m4 \
+		autom4te.cache \
+		blocxx_header_test_file.h \
+		config.cache \
+		config.guess \
+		config.log \
+		config.sub \
+		depcomp \
+		missing \
+		mkinstalldirs \
+		test/unit/set_test_libpath.sh
+
+override_dh_autotools-dev_restoreconfig:
+	dh_autotools-dev_restoreconfig
+	rm -f	*.dh-orig
+
+override_dh_strip:
+	dh_strip --dbg-package=libblocxx-dbg

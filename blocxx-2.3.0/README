@@ -1,0 +1,100 @@
+CONTENTS
+
+   1.0 - What is BloCxx?
+
+	2.0 - What does it do?
+
+	3.0 - Release binary compatibility
+
+	4.0 - How can I help?
+
+
+-------------------------------------------------------------------------------
+1.0 What is BloCxx?
+
+BloCxx is a cross-platform, general purpose C++ framework for application
+development.  It is an extended common library that was originally extracted
+from OpenWBEM.
+
+The latest version of BloCxx can be found at http://blocxx.sourceforge.net
+
+
+-------------------------------------------------------------------------------
+2.0 What does it do?
+
+BloCxx provides many of the primitives and operations that are needed for
+real-life work.  These include, but are not limited to:
+
+* Threading
+    A single interface to threading across the various platforms.  Locks,
+    mutexes, conditions, and thread pools are all supported.
+
+* Dynamic library loading
+    Supports the native platform library loading and symbol lookup through a
+    single interface.
+
+* Logging
+    Provides logging to the system log, files, or user-defined log locations.
+    Allows thread-specific logging.
+    A nice, but slightly outdated tutorial is available here:
+	 http://developer.novell.com/wiki/index.php/Using_BloCxx/System_Logging_with_BloCxx
+
+* Strings
+    A more complete string than std::string.  It is internally reference
+    counted and copy-on-write, so copies can be made and used with little
+    overhead.
+
+* Formatting
+    Format text using a format string.  Anything with a ostream<< operator can
+    be formatted into text.
+    Example: std::cout << Format("%1, %2", "Hello", "World!") << std::endl;
+
+* Command line parsing
+    Allows easy handling of command line arguments and help output.
+
+* Reference-counted objects
+    All of your standard reference counted pointers with optional (defaults to
+    on) null pointer checking.
+
+* Exceptions with details
+    The blocxx::Exception class includes line numbers, error codes, and error
+    text.  Exceptions can be chained to report an exception that was caused by
+    another without losing any of the original exception details.
+
+* File system operations
+    Cross-platform file operations through a single interface.  Mock objects
+    can be used to aid in creating tests for operations that use files.
+
+* Range-checked primitives (optional)
+    Primitives such as Arrays in BloCxx can use bounds checking to prevent
+    illegal memory access.
+
+* Process execution
+    Run processes a variety of ways, optionally communicating through a 2-way
+    pipe or simply gather output and return code.  Execution can be mocked to
+    assist in test creation.
+
+
+-------------------------------------------------------------------------------
+3.0 Release binary compatibility
+
+No binary compatibility will ever be maintained from one release of BloCxx to
+another.  Many details are exposed through the header files, and the routine
+changing of a single class data member will break compatibility.  You should be
+able to install multiple versions of the BloCxx library at the same time, so
+this will not be an issue.
+
+Note that we do try hard to maintain source compatibility for client
+applications, if at all possible we mark interfaces as deprecated when a
+replacement has been created.
+
+
+-------------------------------------------------------------------------------
+4.0 How can I help?
+
+Use it. Report any bugs, successes, failures, wishes, and annoyances to the
+various trackers on the sourceforge project page.  We cannot guarantee that we
+will fix everything you report, but we will make an effort.
+Find the trackers at: https://sourceforge.net/projects/blocxx/develop
+
+

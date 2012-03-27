@@ -1,0 +1,105 @@
+Source: libblocxx
+Priority: extra
+Maintainer: Björn Esser <bjoern.esser@googlemail.com>
+Build-Depends: automake,
+               autotools-dev,
+               bc,
+               debhelper (>= 8.0.0),
+               dh-autoreconf,
+               libpcre3-dev,
+               libpth-dev,
+               libssl-dev,
+               m4,
+               mawk,
+               mime-support,
+               pkg-config,
+               re2c
+Standards-Version: 3.9.3
+Section: libs
+Homepage: http://blocxx.sf.net/
+
+Package: libblocxx-dev
+Section: libdevel
+Architecture: any
+Depends: libblocxx8 (= ${binary:Version}),
+         ${misc:Depends}
+Description: BloCXX development libraries, header files and documentation
+ BloCxx is a cross-platform, general purpose C++ framework for application
+ development.  It is an extended common library that was originally extracted
+ from OpenWBEM.
+ .
+ This package contains the BloCXX development files, headers and documentation.
+
+Package: libblocxx-dbg
+Section: debug
+Architecture: any
+Depends: libblocxx-dev (= ${binary:Version}),
+         libblocxx8 (= ${binary:Version}),
+         ${misc:Depends}
+Description: BloCXX debugging symbols
+ BloCxx is a cross-platform, general purpose C++ framework for application
+ development.  It is an extended common library that was originally extracted
+ from OpenWBEM.
+ .
+ This package contains the BloCXX debugging symbols.
+
+Package: libblocxx8
+Architecture: any
+Depends: ${misc:Depends},
+         ${shlibs:Depends}
+Description: BloCXX--C++ Framework for Application Development
+ BloCxx is a cross-platform, general purpose C++ framework for application
+ development.  It is an extended common library that was originally extracted
+ from OpenWBEM.
+ .
+ BloCxx provides many of the primitives and operations that are needed for
+ real-life work.  These include, but are not limited to:
+ .
+    * Threading
+        A single interface to threading across the various platforms. Locks,
+        mutexes, conditions, and thread pools are all supported.
+ .
+    * Dynamic library loading
+        Supports the native platform library loading and symbol lookup
+        through a single interface.
+ .
+    * Logging
+        Provides logging to the system log, files, or user-defined log
+        locations. Allows thread-specific logging.
+ .
+    * Strings
+        A more complete string than std::string.  It is internally reference
+        counted and copy-on-write, so copies can be made and used with little
+        overhead.
+ .
+    * Formatting
+        Format text using a format string.  Anything with a ostream<< operator
+        can be formatted into text.
+        Example: std::cout << Format("%1, %2", "Hello", "World!") << std::endl;
+ .
+    * Command line parsing
+        Allows easy handling of command line arguments and help output.
+ .
+    * Reference-counted objects
+        All of your standard reference counted pointers with optional
+        (defaults to on) null pointer checking.
+ .
+    * Exceptions with details
+        The blocxx::Exception class includes line numbers, error codes,
+        and error text.  Exceptions can be chained to report an exception
+        that was caused by another without losing any of the original
+        exception details.
+ .
+    * File system operations
+        Cross-platform file operations through a single interface.  Mock
+        objects can be used to aid in creating tests for operations that
+        use files.
+ .
+    * Range-checked primitives (optional)
+        Primitives such as Arrays in BloCxx can use bounds checking to
+        prevent illegal memory access.
+ .
+    * Process execution
+        Run processes a variety of ways, optionally communicating through
+        a 2-way pipe or simply gather output and return code.  Execution can
+        be mocked to assist in test creation.
