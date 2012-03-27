@@ -1,9 +1,6 @@
 #!/usr/bin/make -f
 #export DH_VERBOSE=1
 
-AM_VERSION=-1.9
-export ACLOCAL = aclocal${AM_VERSION}
-export AUTOMAKE = automake${AM_VERSION}
 export LIBTOOLIZE = true
 
 %:
@@ -26,10 +23,12 @@ override_dh_autoreconf:
 override_dh_auto_configure:
 	dh_auto_configure -- \
 		--enable-64-bit-build \
+		--enable-c++0x \
+		--enable-debug-mode \
+		--enable-stack-trace \
 		--enable-iconv \
 		--enable-ipv6 \
-		--enable-debug-mode \
-                --enable-stack-trace
+		--enable-pcre
 
 override_dh_auto_clean:
 	dh_auto_clean
