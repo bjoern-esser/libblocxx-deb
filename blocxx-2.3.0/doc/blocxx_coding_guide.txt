@@ -1,0 +1,524 @@
+-----------------------------------------------------------------------------
+Don't use bool (or blocxx::Bool) in parameter lists.  It makes calling code 
+impossible to understand.  Use an enum instead.
+	e.g.:  f(true, false, true, true); // what the hell is this doing?
+		// I'll have to look up the function declaration to find out!
+	       f(DO_X, OMIT_Y, USE_Z, DO_A); // don't even need a comment here.
+Using bools makes it difficult (sometimes impossible) to overload the
+function, and can also make it hard to catch errors such as swapping the order
+of parameters and such.
+-----------------------------------------------------------------------------
+Naming conventions:
+enums begin with E, and if they're used as 
+a parameter to a function, they should end with Flag.  enum values should be
+all caps, with underscores between words, and begin with E_.  Avoid anonymous
+(aka unnamed) enums.  Don't use an int variable to store an enum value. i.e.:
+
+// this is bad
+enum
+{
+	E_A,
+	E_B
+};
+
+int myEnumVal = E_A;
+
+// do this instead
+enum EMyEnum
+{
+	E_A,
+	E_B
+};
+
+EMyEnum myEnumVal = E_A;
+
+Don't assign numerical values to enum items unless they have some external
+meaning.  Having numerical values makes enums prone to error as well as makes
+them hard to maintain or refactor.  It sucks to have to renumber all the
+values just to insert a new item in the middle.
+
+All classes and public identifiers (anything in a header) must be in namespace
+blocxx.  If it's not meant for external use, such as internal implementation 
+details or variables local to a translation unit, then it should be put into 
+an unnamed namespace to avoid possible duplicate symbol link-time errors.  
+This can be a worse issue than you might think because of providers, all the 
+symbols are global and can possibly conflict with symbols from other libraries
+or the application.
+
+Capitalize type and namespace names, but not other names.
+
+All macros must begin with BLOCXX_.  Macros should be #undef'd if they are not
+meant to be re-used.
+
+Please be aware of and follow the standard c++ naming rules about identifiers
+that are reserved for implementation purposes.  If you break these rules, you
+run the risk of breaking when compiling on a different compiler or version.
+The rules are:
+Names containing "__" (double underscore) or beginning with "_" are entirely
+forbidden.  This applies to both macros and normal identifiers.
+-----------------------------------------------------------------------------
+Exceptions.
+When to use catch(...).  e.g.:
+try
+{
+	//...
+}
+catch (...)
+{
+	// swallow all exceptions
+}
+
+Only do that in destructors.  Never let an exception escape a destructor, if
+it does, it will probably abort the application.
+There may be other occasions where this is appropriate, such as in threads
+that need to keep running even though one iteration of it's work has failed.
+In this case, the ThreadCancelledException should *never* be caught:
+
+try
+{
+	//...
+}
+catch (ThreadCancelledException&)
+{
+	throw;
+}
+catch (...)
+{
+	// swallow all exceptions
+}
+
+In some cases (this should be very rare if the code is written correctly using
+the RAII idiom), if may be necessary to use catch(...) like this:
+
+try
+{
+	//...
+}
+catch (...)
+{
+	// do some cleanup
+	throw;
+}
+
+Also, main() should catch(...) and gracefully exit.
+
+Never use exception specifications (except for no throw "throw()", and then
+only if you are 100% sure it can't throw), because it can easily lead to
+abort() being called if an exception is thrown that doesn't match the
+specification.  Unfortunately gcc doesn't check, and so this can easily lead
+to problems.
+
+Derive all new exceptions from blocxx::Exception.  In most cases, you can simply
+use the BLOCXX_DECLARE_EXCEPTION and BLOCXX_DEFINE_EXCEPTION macros.
+
+Use the BLOCXX_THROW macro or its variants to throw an exception; this will
+automatically pass in the filename and line number, which is a great
+debugging help.
+
+Almost any function in BloCxx may throw a std::bad_alloc if memory is exhausted.
+Keep this in mind when writing exception safe code.  Almost anything can throw.
+
+-----------------------------------------------------------------------------
+c++ namespaces.
+NEVER put "using namespace <x>;" in a header file.  Avoid putting it in a cpp
+file, especially at global scope.  Preferred practice is to either explicitly
+use the namespace: "std::cout << std::endl" or to name each item:
+using std::cout;
+using std::endl;
+
+Use unnamed namespaces instead of static function/data.  Try to put new code
+into a namespace, this is especially important for pluggable shared libaries
+like providers.
+Don't use a class with all static functions/data, instead use a namespace.
+
+Put all library code into namespace blocxx or a sub-namespace.
+-----------------------------------------------------------------------------
+If at all possible avoid static objects that have a constructor.  These can
+lead to the dreaded "static initialization dependency order" problem.  You're
+almost bound to run into it if you have a static mutex and you try and lock it
+in a static object's constructor in another translation unit, or even possibly
+in the same translation unit, if the mutex is declared after the other static
+object.
+Also related to this: don't use function-scope static objects.  The first
+time the function is called, the object will be constructed. The
+destructor will be registered to be run at exit time (see atexit()).
+Unfortunately, the shared library can be unloaded, and then at exit,
+non-existent code (the destructor) will be run, resulting in a segfault.
+-----------------------------------------------------------------------------
+memory & low-level C-style code:
+The #1 rule in blocxx is that you can't segfault or leak memory!  This is
+typically associated with low-level C-style code, so #2 rule is that you can't
+write code like that unless you have a really good reason (no, optimization
+isn't a good enough reason, unless you've profiled it and it's using up >30%
+of the execution time)
+You should always use a class with a destructor (such as Reference<>) to 
+manage memory.  If you ever have to write "delete foo", then you're doing
+something wrong.
+Use String instead of char* and Array<> instead of raw C arrays.
+Use typed input/output by using Format and stream insertion operators.  Don't
+use printf/scanf and friends.
+Use std::copy instead of memcpy.
+Use std::fill (or fill_n) instead of memset.
+Use std::sort instead of qsort()
+Use c++ casts (dynamic_cast, static_cast, reinterpret_cast, const_cast)
+instead of old c-style casts.
+See "Four First Steps to Modern C++ Programming" by Andrew Koenig and Barbara
+E. Moo in C/C++ User's Journal Aug. 2003 pp. 49-54 if you have any more
+questions or objections.
+-----------------------------------------------------------------------------
+All files must have a copyright notice.
+-----------------------------------------------------------------------------
+Header files must have a standard include guard, and it should be like this:
+#ifndef BLOCXX_FILE_NAME_HPP_INCLUDE_GUARD_
+#define BLOCXX_FILE_NAME_HPP_INCLUDE_GUARD_
+//...
+#endif
+Use all caps and put underscores between words in the filename (where it would
+be a new capital letter in the class name)  It's important to not get a
+collision with the same include guard of another file, that will cause
+unexplainable errors that lead to a lot of head-scratching and wasted time.
+Note that identifiers containing __ are reserved for the standard c++
+library, and MUST not be used in other code.
+-----------------------------------------------------------------------------
+All files must include "BLOCXX_config.h" as the first include file.
+cpp files must include it's corresponding header file as the 2nd include file.
+-----------------------------------------------------------------------------
+Try to minimize header dependencies as much as possible.  Include the minimum
+possible in header files.  You'll need to include headers for base classes as
+well as any types used as member variables.  Everything else can be forward
+declared.  If you use the pimpl idiom, you can get away with only including
+Reference (or COWReference).  This helps to greatly reduce compilation
+time and also helps prevent bloat from inline functions.
+Avoid putting forward declarations in the header which needs it.  This
+causes a problem when the type changes, because all the forward declarations
+need to be changed as well.
+The other extreme of creating a forward declaration header for each class
+isn't a good solution either because it's too much work to create and causes
+a proliferation of headers.
+The method we use is to use forward declaration headers for common classes 
+(e.g. CommonFwd.hpp and ArrayFwd.hpp).  When adding a new class, add
+it to the appropriate forward declaration header.  This way, each class is
+defined in exactly one place, and has only one forward declaration.
+When you need a forward declaration, simply include the appropriate header
+instead of duplicating the forward declaration.
+-----------------------------------------------------------------------------
+If a function has unused parameters, don't comment out or omit the parameter
+name to avoid an unused parameter warning.  Cast it to void at the beginning
+of the function.  This makes it possible to search for specific parameters.
+It also avoids problems with nested C-style comments. We don't have the
+unused warning turned on anymore so this isn't really a problem now.
+-----------------------------------------------------------------------------
+Make simple things simple and complex things possible
+-----------------------------------------------------------------------------
+If a class has more than 7 data members or 7 member functions, then it's too
+big, and you should think really hard about why and try to refactor it.
+Remember separation of concerns.  Each class should do 1 thing.  Each function
+should do 1 thing.
+Define a class's invariant.  Only functions that maintain or check the
+invariant belong in a class.  Other functions belong outside the class as
+utility/helper functions.
+Use BLOCXX_ASSERT macros to validate invariants and function pre-conditions.
+-----------------------------------------------------------------------------
+Don't use spaces to indent the code.  This is so you can set your tab
+spacing to your own liking in your editor.  If it's all spaces, you're stuck
+with whatever the original author did.  Definitely don't mix tabs/spaces.
+Here's a little bash script that will convert all spaces into tabs, in order
+to maintain consistency.
+for x in `find . -name '*.?pp'`; do echo $x; unexpand -4 $x > tmp; mv tmp $x;
+done
+-----------------------------------------------------------------------------
+casts:
+Don't use c-style casts.  If you need to cast something, you should evaluate
+if it's really necessary and why.  Here's some situations where it may be
+necessary to use each:
+
+static_cast - you are converting a number that has an acceptable loss of
+precision or range. You need to help the compiler pick which conversion is
+acceptable.
+
+reinterpret_cast - you are reading or writing data into a generic piece of
+memory to be stored to disk or sent over the network.  Make sure the data is
+in the correct endianness and avoid just writing whole structs as padding
+issues may cause portability and/or interoperability problems.
+
+dynamic_cast - This should generally be avoided in favor of virtual functions,
+so you don't end up with the classic textbook type switch statement.
+Sometimes, however, it does make sense if you need to call a certain function
+on one type which doesn't exist as a virtual function on the base class.  If
+you find this to be the case, evaluate whether it makes sense to move the
+function to the base class.  If it does apply to the hierarchy, then move it,
+otherwise, leave it there and do the dynamic_cast.
+
+const_cast - The only situation I can think where this should be used is when
+interfacing to broken C-apis that should be marked as having const parameters,
+but they don't.  Be careful that the const variable doesn't get modified.
+It's const for a reason!  Sometime you may be tempted to use this in a class
+in a const function to modify a member variable.  If that's the case, then you
+should examine if the function is really a const function, or if the member
+variable should be made mutable.
+-----------------------------------------------------------------------------
+Avoid implicit conversions.  When creating classes all constructors that take
+only 1 argument should usually be marked explicit (the exception is the copy
+constructor, which shouldn't ever be explicit).  Don't write conversion
+operators:
+class myClass {
+public:
+  operator int(); // usually a bad thing to do
+};
+Instead write converter functions:
+class myClass {
+public:
+  int toInt();
+};
+-----------------------------------------------------------------------------
+Testing.
+Before you modify or write any new code, make a test for it.  There are 2
+types of tests in BloCxx: unit tests and acceptance tests.  The unit tests
+are under test/unit, and are organized by class.  You can create a new test by
+running the newtest.sh script and passing in as the first argument the
+classname.  So if you're writing a new class called blocxx::Foo, you'd put 
+it in blocxx/Foo.{hpp,cpp}, you'd run ./newtest Foo.  Rename testSomething to be
+something meaningful, and create a new test function (don't forget to add it
+to the suite) for each different type of functionality that you're going to
+test.  There is also the acceptance test (also known as integration or system
+test).  It's a script and associated programs under test/acceptance.  This
+tests the overall functionality of the cimom and client api & applications.
+If something is too complicated to test in the unit tests, make sure you get
+it covered by the acceptance test.
+-----------------------------------------------------------------------------
+Creating a new class.
+Use javadoc-type comments.  We use doxygen to generate API docs.
+
+When you create a new class, make sure you design and document the following:
+- Invariants (Class invariants, expressions which are always true.)
+
+- Repsponsibilities
+   "Responsibilities identify problems to be solved. The solutions will exist in
+   many versions and refinements. A responsibility serves as a handle for
+   discussing potential solutions. The responsibilities of an object are
+   expressed by a handful of short verb phrases, each containing an active verb.
+   The more that can be expressed by these phrases, the more powerful and concise
+   the design. Again, searching for just the right words is a valuable use of
+   time while designing." (Kent Beck, Ward Cunningham)
+
+- Collaborators
+   "One of the distinguishing features of object design is that no object is an
+   island. All objects stand in relationship to others, on whom they rely for
+   services and control. The last dimension we use in characterizing object
+   designs is the collaborators of an object. We name as collaborators objects
+   which will send or be sent messages in the course of satisfying
+   responsibilities." (Kent Beck, Ward Cunningham)
+
+- Thread safety: (this is for all member functions of the class)
+   non-reentrant (need a mutex protecting it & the class cannot call back into
+    itself.)
+   reentrant (need a mutex protecting it)
+   read (multiple readers are okay, need a rw lock protecting it)
+   read/write (don't need any mutex protection)
+
+- Copy semantics:
+   Value (copies make a full deep copy)
+   Copy On Write (uses COWReference to store implementation.  Copies are fast, 
+    calling a non-const method will make a deep copy if needed to make it
+    unique.  It can be passed as parameters and returned from functions with
+    little overhead. Making copies is thread-safe.  Modifying separate copies
+    in separate threads is safe.)
+   Pointer (class probably uses Reference to store a pointer to the
+    implementation.  Copies are fast.  All copies refer to the same
+    implementation.  Modifying separate copies from separate threads is safe
+    only if the class is thread safe.)
+   Non-copyable (copy ctor and operator= are private.  Use Reference if you
+    need to refer to an instance of the class in multiple places.)
+   Clone (polymorphic class which supports Clone())
+
+- Exception safety: (document the lowest level of all the member functions for
+   the class, and document each member function as well)
+   Exception safety levels include:
+   Buggy (If an exception was thrown, the function may have leaked memory
+    and/or left the instance in a non-usable inconsistent state (the invariant
+    is probably broken)). This is considered a bug and must be fixed.
+   Basic (If an exception was thrown, the function didn't leak memory, the
+    instance is still in a usable consistent state (the invariant is still
+    valid), but the operation may be partially completed)
+   Strong (If an exception was thrown, the instance is in the state it was in
+    before the method was called. Basically commit/rollback semantics.)
+   No-throw (The method will never throw an exception)
+
+- Error conditions: what causes the errors and how they're reported. This item
+   only applies to [member] functions.
+
+There is no reason to document default constructor, destructor, copy
+constructor, or assignment operator if they have standard behavior. Do
+document constructors with arguments.
+
+If a class implements an interface, and the behavior is unchanged from the
+interface documentation, don't duplicate the member function interface docs, 
+as this simply creates an additional maintenance point.
+
+All new code must have some sort of test.  A unit test is preferable,
+however in some *extremely rare* conditions, the code may not be sufficiently
+self-contained to be tested as a unit.  In this case, first review the code
+to see if you can make it unit testable, and fix it. Also make sure there's an
+acceptance test that exercises the functionality.  Don't forget to test for
+negative conditions and correct error detection & reporting.
+
+All public classes must be contained in a header file named the same as
+the class itself.  Avoid being lazy and defining multiple public classes in
+the same header.  This makes it difficult for developers to know which header
+to include to get the class definition.  This also applies to exceptions.
+-----------------------------------------------------------------------------
+Inline functions.
+Avoid using inline functions in any header file which may be included by a
+provider.  C++ includes all functions when creating a shared library, so
+all inline functions the library calls may be expanded inline and will also
+be included in the library (probably a provider).  This can cause a lot of
+duplication of code.  This in unavoidable with standard C++ templates, but
+for some templates with g++, it's possible to use explicit external template
+instantiation.  However, this is not always the best solution.  Experiments
+with Array<> actually raised code size significantly, because *all* the
+member functions get instantiated, whereas normally only functions which are
+actually called get instantiated.
+-----------------------------------------------------------------------------
+#ifdefs
+For porting to different platforms it's necessary to use preprocessor #if
+statements.  We don't have any preference wrt whether you use #ifdef,
+#if defined BLOCXX_FOO or #if defined(BLOCXX_FOO).
+If you are simply testing for the presense of a header, add a check to
+configure.in and then use #ifdef BLOCXX_HAVE_HEADER_H.
+Also when using a non-portable function, test for it as well.  In general
+try to test for features in configure.in and then #ifdef on the presense
+of the feature.  Sometime this is pointless, as in the case of win32 threads
+which are completely different, so just a whole chunk of the file is
+enclosed inside an #ifdef BLOCXX_WIN32.  Also sometimes the build system does
+the selection of code using automake conditionals.
+Try to minimize the number of #ifdefs.  If possible create a facade so
+certain functionality is only ifdef'ed in one place instead of in 10 places
+where it may be used.
+-----------------------------------------------------------------------------
+All blocks must have braces on their own line. The only exception is the
+closing brace on a do/while loop.
+Yes:
+	if (x)
+	{
+		return;
+	}
+
+	while (foo())
+	{
+		// do nothing -- foo() will eventually return false
+	}
+
+	do
+	{
+		// ...
+	} while (x);
+
+No:
+	if (x)
+		return;
+
+	while (foo());
+
+	try {
+		// ...
+	} catch {
+		// ...
+	}
+
+	while (!x.eof()) x.readNext();
+
+-----------------------------------------------------------------------------
+To differentiate between function calls, put spaces between control statements
+and the open parentheses. For functions, don't put any space.
+Yes:
+	if (x)
+	{
+		// ...
+	}
+
+	for (...)
+	{
+		// ...
+	}
+
+	doSomething(...);
+No:
+	if(x)
+	{
+		// ...
+	}
+
+	for(...)
+	{
+		// ...
+	}
+
+	doSomething (...);
+-----------------------------------------------------------------------------
+Always use the virtual keyword for virtual functions in derived classes to 
+document the fact that they are virtual.
+
+Don't write inline virtual functions in a header, since the compiler can't 
+inline them, and it must instantiate them any *every* translation unit which 
+#include's the header--it causes code bloat.
+
+No:
+	// header A.hpp
+	class A
+	{
+		virtual doSomething()
+		{
+			// ...
+		}
+		// ...
+	};
+
+-----------------------------------------------------------------------------
+Use an atomic, non-throwing swap operation to implement the copy-assignment
+operator.
+
+	A& A::operator=(const A& rhs)
+	{
+		A(rhs).swap(*this);
+		return *this;
+	}
+	void swap(A& rhs) throw()
+	{
+		// call non-throwing swap on the base class & each member variable
+	}
+
+Using this pattern prevents many of the common bugs in assignment operators.
+(Exceptional C++ Item 41)
+-----------------------------------------------------------------------------
+In a for() loop, don't modify the counter in the body of the loop.  If you
+need to modify the counter, use a while loop instead.
+-----------------------------------------------------------------------------
+Naming:
+m_memberVariable
+s_staticClassMemberVariable
+
+
+-----------------------------------------------------------------------------
+Pass objects by reference instead of by value. An exception is made for Bool
+and Char16.
+
+Pass native types by value instead of by reference, unless it's an out parameter.
+-----------------------------------------------------------------------------
+Don't use deprecated C++ features.  These include:
+  Including C library headers with the C name (#include <stdlib.h>), the 
+  correct way to do it is to put a c infront of the name and remove the .h 
+  (#include <cstdlib>).
+
+  The use of the static keyword when declaring object in namespace scope.
+  Use an unnamed namespace instead.
+
+  Assigning string literals to a char* variable (char* s = "foo").
+  String literals are const (const char* s = "foo").
+
+  <strstream> header.  However the replacement (<sstream>) can't be used
+  either (until we drop support for gcc 2.95.x) because it doesn't exist on
+  gcc 2.95.2.  Use blocxx/StringStream.hpp, and if you need a iostream
+  you'll have to write one.
+
+
+

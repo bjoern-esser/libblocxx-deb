@@ -1,0 +1,70 @@
+####
+#### FIXME: this is still openwbem related!
+####
+
+- sync up any openwbem/src/common changes since
+  Thu Feb 24 11:30:39 MST 2005
+
+Remaining items to remove OpenWBEMisms:
+    - LogAppender.hpp has some string constants and pound defines
+      which were copied from the old OW_ConfigOpts.  LogAppender and 
+      Logger also depend on ConfigFile.hpp for ConfigMap.  ConfigFile
+      needs to be removed from BloCxx, and the LogAppender interface
+      needs to be changed to not require a ConfigMap. 
+    - ConfigFile needs to go away (see above). 
+
+Testing:
+    - various make check components to have separate namespaces.
+    - Test that failed BLOCXX_ASSERT(foo) comes across the wire correctly.
+    - Validate no "stray" symbols in libraries: nm -Bpg src/common/libblocxx.so.4 | egrep '^[0-9a-z ]{8} [^Uwt] .*blocxx[^4].*'
+       for x in `find . -name lib\*4`; do nm -Bpg $x | egrep '^[0-9a-z ]{8} [^Uwt] [^._].*' | less; done
+
+Fix problems:
+    - Either get rid of NWIface, or un-deprecate it. 
+    - Fix String::toUpperCase(), toLowerCase() to be UTF-8 aware.
+    - Audit classes in src/blocxx, especially comparison operators and 
+      operator<<
+    - Fix all exceptions to use error codes.
+    - Throw appropriate exceptions, use chained exceptions. Log chained 
+      exceptions correctly.
+    - Create a impl namespace and move internal classes into it.
+    - Document public/internal classes.
+    - Doxygen appears to ignore global functions associated with a class in 
+      the header file for that class -- for example, when you look up String, 
+      it doesn't show you the associated relational operators ==, !=, <, etc.
+
+New features:
+    - Config file parser/writer? 
+
+Refactorings:
+    - Start to use __attribute__ ((warn_unused_result)) where applicable.
+    - Templatetize/inline the mutex lock classes.
+
+    Interface breaking, but of questionable value.
+    - Rename NonRecursiveMutex -> Mutex and Mutex -> RecursiveMutex
+
+Documentation:
+    - Enhance developer documentation 
+    - Make a web page that has a list of projects/products that are using 
+      BloCxx.
+    - Update javadoc on header files
+    - Document how to create an SSL key+cert
+    - Document each class's:
+      - Copy semantics
+      - Thread safety
+      - Exception safety
+    - Define/document invariants for classes 
+
+Optimizations:
+    - Use KCacheGrind to find any hot spots
+    - See if using StringBuffer as the String internal representation is 
+      faster than ByteBuf. Probably remove COWReference completely and just
+      store a ByteBuf/StringBuffer?
+      - Fix comparisons against const char* const to not allocate a new buffer.
+      - See if using concepts of Mozilla's string classes would be better,
+        such as having a string with a large buffer for stack use.
+    - inline the smaller functions in String, StringBuffer, and other 
+      commonly used classes. First we need repeatable benchmarks to measure
+      performance in order to determine if it's worth it.
+    - Use HashMap class where appropriate.
+

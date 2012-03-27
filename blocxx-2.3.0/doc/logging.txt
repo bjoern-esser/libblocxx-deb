@@ -1,0 +1,242 @@
+-----------------------------------------------------------------------------
+Tutorial:
+	Read the fine tutorial by Matt Ryan at
+	http://developer.novell.com/wiki/index.php/Using_BloCxx/System_Logging_with_BloCxx
+
+-----------------------------------------------------------------------------
+Definitions:
+log
+	n. The end-point that log messages are sent to.  Examples include a log file, syslog and the console.
+	v. The act of generating and outputting a message. e.g. The error message was logged.
+
+logger
+	A C++ instance of a class derived from Logger, which is used by the OW code to output log messages.
+
+component
+	A string identifying the logical grouping of code within OW that generated a log message. 
+	It is useful to organize components hierarchially, using a "." to separate ancestor and descendent. 
+	The hierarchy is meaningless to OW from a configuration or API point of view, but it is helpful for log processing.
+	The component "*" is reserved for configuration to mean all possible components.
+	Examples include "owcimomd", "owcimomd.http_server", "owcimomd.http_server.local_auth", "vintela.computer_system_provider".
+
+category
+	Associated with a message to indicate attributes of the log message.
+	Also commonly refered to as log levels.
+	The category "*" is reserved for configuration to mean all possible categories.
+	Examples include Debug, Info, Warn, Error, FatalError, Trace, AuthenticationFailure, etc.
+	The 4 categories "Debug", "Info", "Error", "FatalError" are treated as levels for configuration purposes. 
+	If a log is configured for Debug, all 4 categories will be output.
+	Otherwise there is no relationship between categories.
+
+message
+	The text of a message. A message has the following attributes: component, category, source filename, source line number, date/time, process id, thread id.
+
+message format
+	A pattern which indicates the format of the log message and associated attributes.
+
+-----------------------------------------------------------------------------
+Feature requirements & Use case list:
+
+- Ability to log all messages at or below a threshold (one of the 4 predefined categories) into a log.
+
+- Ability to configure a log for each component.  e.g. A specific provider's messages all go to a log. The log only contains the provider's messages.
+
+- Set different thresholds for different components of the cimom. e.g. If I'm interested in debugging one specific component, I can turn on debug logging for that specific component (say my provider I'm working on) and not have to wade through tons of other unwanted debug messsages.
+
+- Ability to configure a log for a specific category.  e.g. The error messages from all components go to a log.
+
+- Ability to configure a log with a "component"/"message category" combination. e.g. auditing of authentication: it would be nice to be able configure logging of all authentication failures and/or successes, and nothing else, to a certain log.
+
+- User-defined logfile formats. Use the same formatting rules as log4j
+(or log4perl, like specified at
+http://search.cpan.org/~mschilli/Log-Log4perl-0.48/lib/Log/Log4perl/Layout/PatternLayout.pm)
+Available data includes: [date and time] [pid/thread-id] [category] [component] [log message]
+
+- Ability to output to a log that can be processed by log4j compatible log
+  processing tools (e.g. Chainsaw)
+
+- Ability to configure the console logging when the cimom is run in debug mode
+  (with -d)
+
+-----------------------------------------------------------------------------
+On to the design:
+
+Each log message will have an associated component, category, source filename, source line number, date/time, process id, thread id.
+
+{ "Debug", "Info", "Error", "FatalError" } are the set of predefined message categories.  This set may be treated as levels, so that a message with a higher level category is also considered matching a lower level category (i.e. a FatalError is also categorized as a Debug level). Additional categories may be used, but they are independent of any other category. They are also the most commonly used, so the API will have convenience functions for them.
+
+A log is configured with a name, components, categories, format, type and any specific logger information such as a filename. If a component == "*", then it will match all components.  If a category == "*", then it will match all message categories.
+
+For owcimomd, there is a predefined log named "main". The owcimomd.log_level and owcimomd.log_location config items will be deprecated but still supported, and they will affect this log if set.
+
+For owcimomd, there is a predefined log named "debug". This log will be
+enabled when owcimomd is run with a -d.  The default will be all categories
+and levels.
+
+When a message is sent to a logger, it will be evaluated against each log's configuration and if it matches, the message will be formatted according to the format configuration and output to the log.
+
+-----------------------------------------------------------------------------
+Configuration
+A config item ("owcimomd.logs" ? ) will contain a space separated list of names for each additional log to configure.  For each log name, the following config items will apply:
+
+log.<log name>.components
+contains a space delimited list of the components the log will output.  "*" means all components.  Default is "*" if not specified.
+
+log.<log name>.categories
+contains a space delimited list of the categories the log will output. "*" means all categories. If specified in this item, the predefined categores are not treated as levels, but as independent categories. No default is available, and if not set, no categories will be logged, and the level config item must be set.
+
+log.<log name>.level
+If set, the log will output all predefined categories at and above the specified log_level.  If not set, the categories config item must be set.
+
+log.<log name>.format
+Specifies the format of the log messages. If not set, "%m%n" is the default.
+
+log.<log name>.type
+Specifies the type of the log.  If not set, "syslog" is the default. Possible values: "syslog", "file", "stderr"
+
+The following options are applicable to the "file" log type:
+log.<log name>.location
+Specifies the filename of the log.
+
+log.<log name>.max_file_size
+An unsigned integer. The log file's maximum size in KB. 0 means unlimited. The default is 0.
+
+log.<log name>.max_backup_index
+An unsigned integer. Determines how many backup files are kept before the oldest is erased. If set to 0, no backup files will be made and the log file will be truncated when it reaches max_file_size. Default is 1.
+
+
+Components are organized hierarchically using a '.' as the ancestor/child
+separator. In the code, all component namess are represented by a local 
+variable COMPONENT_NAME.
+
+-----------------------------------------------------------------------------
+Component list:
+ow                                - Root for all OpenWBEM components
+ow.owcimomd                       - The cimom daemon
+ow.owcimomd.CIMServer             - The CIM Server
+ow.owcimomd.PollingManager        - The polling manager
+ow.owcimomd.ProviderIFCLoader     - The Provider interface loader
+ow.owcimomd.indication.Server     - The indication server
+ow.owcimomd.indication.LifecyclePoller - Indication lifecycle poller
+ow.owcimomd.indication.LifecycleCreator - The lifecycle
+                                    indicatition creator.
+ow.owcimomd.AuthManager           - AuthManager responsible for loading
+                                    authentication modules.
+ow.requesthandler.cimxml          - cimxml request handler/operation decoder
+ow.requesthandler.owbinary        - OpenWBEM binary request handler
+ow.repository.hdb                 - hdb CIM repository
+ow.httpserver                     - The http server
+ow.authorizer                     - Authorizers
+ow.authorizer.simple              - SimpleAuthorizer
+ow.authorizer.simple2             - SimpleAuthorizer2
+ow.authorizer.AuthorizerManager   - The AuthorizerManager
+ow.listener.cimxml                - HTTPXMLCIMListener
+ow.provideragent                  - ProviderAgent
+ow.provider.cpp.ifc               - The c++ provider interface
+ow.provider.remote.ifc            - The remote provider interface
+ow.provider.npi.ifc               - The npi provider interface
+ow.provider.perlnpi.ifc           - The perl npi provider interface
+ow.provider.cmpi.ifc              - CMPI provider interface
+ow.provider.*                     - Each OW provider uses it's name with the
+                                    ow.provider. prefix
+ow.owmofc                         - The mof compiler utility
+ow.owrepositorydump               - The owrepositorydump utility
+
+-----------------------------------------------------------------------------
+Log message format
+
+Text mixed with printf() style conversion specifiers.
+Available conversion specifiers:
+%c - The component (e.g. owcimomd)
+%d - The date. May be followed by a date format specifier enclosed between 
+     braces. For example, %d{%H:%M:%S} or %d{%d %b %Y %H:%M:%S}. If no date 
+     format specifier is given then ISO8601 format is assumed. 
+     For more information of the date format specifiers, lookup the 
+     documentation for the strftime() function found in the <ctime> header.
+     The only addition is %Q, which is the number of milliseconds.
+%F - The file name
+%l - The filename and line number. e.g. file.cpp(100)
+%L - The line number
+%M - The method name where the logging request was issued (only works on 
+     C++ compilers which support __PRETTY_FUNCTION__ or C99's __func__)
+%m - The message
+%e - The message as XML CDATA. This includes the "<![CDATA[" and ending "]]>"
+%n - The platform dependent line separator character (\n) or characters (\r\n)
+%p - category, aka level, aka priority
+%r - The number of milliseconds elapsed since the start of the application 
+     until the creation of the logging event
+%t - Thread id
+%% - %
+\n - newline
+\t - tab
+\r - linefeed
+\\ - \
+\x<hexDigits> - The character represented in hexadecimal.
+
+  It is possible to change the minimum field width, the maximum field width 
+and justification. The optional format modifier is placed between the 
+percent sign and the conversion character.
+  The first optional format modifier is the left justification flag which is 
+the minus (-) character. The optional minimum field width modifier follows. 
+It is an integer that represents the minimum number of characters to 
+output. If the data item requires fewer characters, it is padded with 
+spaces on either the left or the right, according to the justification 
+flag. If the data item is larger than the minimum field width, the field 
+is expanded to accommodate the data.
+  The maximum field width modifier is designated by a period followed by a 
+decimal constant. If the data item is longer than the maximum field, then 
+the extra characters are removed from the beginning of the data item 
+(by default), or from the end if the left justification flag was specified. 
+
+Examples:
+  Log4j TTCC layout:
+  "%r [%t] %-5p %c - %m"
+
+  Similar to TTCC, but with some fixed size fields:
+  "%-6r [%15.15t] %-5p %30.30c - %m"
+
+  XML output conforming to log4j.dtd 1.2 which can be processed by Chainsaw.
+  If used, this has to be on one line, it's split up here for readability.
+  "<log4j:event logger="%c" timestamp="%d" level="%p" thread="%t">
+   <log4j:message>%e</log4j:message>
+   <log4j:locationInfo file="%F" line="%L"/>
+   </log4j:event>" 
+
+A Color version using ascii escape codes
+log.debug.format = \x1b[1;37;40m[\x1b[1;31;40m%-.6t\x1b[1;37;40m]\x1b[1;32;40m %m\x1b[0;37;40m
+
+More ascii colors:
+red:        \x1b[1;31;40m
+dark red    \x1b[0;31;40m
+green       \x1b[1;32;40m
+dark green  \x1b[0;32;40m
+yellow      \x1b[1;33;40m
+dark yellow \x1b[0;33;40m
+blue        \x1b[1;34;40m
+dark blue   \x1b[0;34;40m
+purple      \x1b[1;35;40m
+dark purple \x1b[0;35;40m
+cyan        \x1b[1;36;40m
+dark cyan   \x1b[0;36;40m
+white       \x1b[1;37;40m
+dark white  \x1b[0;37;40m
+gray        \x1b[0;37;40m
+reset color \x1b[0;37;40m
+
+-----------------------------------------------------------------------------
+syslog
+
+The syslog facility and identity are configurable and you have to provide
+them to the SyslogAppender constructor.
+The default values in the LogAppender::createLogAppender() helper function
+are BLOCXX_PACKAGE_PREFIX"blocxx" for the identity and "user" (LOG_USER)
+for the facility. BLOCXX_PACKAGE_PREFIX is "" by default or else the value
+of the --with-package-prefix= configure option.
+
+The log categories are mapped to syslog levels thusly:
+FatalError -> LOG_CRIT
+Error      -> LOG_ERR
+Info       -> LOG_INFO
+Debug      -> LOG_DEBUG
+*          -> LOG_INFO
+ 

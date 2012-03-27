@@ -1,0 +1,62 @@
+The purpose of this file is to document the portablity objectives of the 
+OpenWbem developers and the decisions they have made to address it.
+
+OBJECTIVE:
+
+Before we started the implementation of OpenWbem, we decided that portablity
+was of paramount importance. We wanted to insure that porting OpenWbem to 
+another platform in the future would not result in a branch off of the 
+original source tree or major modifications to the existing one. If anyone
+takes on the task of porting this to another platform, keep in mind, we are
+not opposed to making modifications to the existing source tree to help 
+facilitate this. Our main objective in this area is to eliminate the need
+for a branch off of the original source tree.
+
+ASSUMPTIONS:
+
+The target platform must meet the following criteria:
+    - Provides an ANSI C++ compiler
+    - Provides the Standard C++ library.
+    - Provides the Standard C library.
+    - Can support threading in some form.
+    - Can support socket communication in some form.
+
+
+APPROACH:
+
+All OS specific functionality is provided by an OS abstraction layer. 
+A couple of global headers may need modification: OW_NetworkTypes.hpp,
+OW_ThreadTypes.hpp.
+compiler/linker flags need to be set from the configure script.  There is
+a switch statement with a case for each OS.
+Throughout the source code, you will see the use of native data types
+(i.e. int, float, etc..). We have chose to not avoid these types unless a method
+we provide requires an specific type of value. For instance, if a method 
+requires an unsigned 32 bit value to be provided when called, the UInt32
+typedef would appear in its signature. If a native integer would suffice then
+the standard 'int' would be used.
+When representing any data that will be stored externally to the cimom, such
+as on disk, or sent over the network, a specific size data type should be
+used. (e.g. send an Int32, not an int)
+There are some files which will be selected by the build which contain
+platform specific functionality (e.g. OW_dlSharedLibrary.cpp which implements
+the SharedLibrary interface using dlsym()).  A new file should be created for
+a drastically different port and the correct file should be selected by the
+build process.
+There are currently some files which don't follow this convention, there are
+#ifdefs inside the file which select the correct implementation, like this:
+#if defined (OW_WIN32)
+a_function()
+{
+  // win32 impl goes here
+}
+#elif
+a_function()
+{
+  // posix impl goes here
+}
+#endif
+Some of these include
+OW_MutexImpl.cpp, OW_ThreadImpl.cpp, OW_Condition.cpp.
+
+

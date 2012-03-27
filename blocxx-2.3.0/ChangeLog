@@ -1,0 +1,3746 @@
+2009-09-17 09:39  mtomaschewski
+
+	* acinclude.m4: Changed to fail after the bc calculator check,
+	  not inside of the check (for optional checks).
+
+2009-09-17 08:58  mtomaschewski
+
+	* Makefile.am, acinclude.m4, configure.in, install-sh: - Added
+	  check for bc command line calculator, mandatory
+	  to preform checks for latest/earliest possible year in
+	  time conversion functions. It causes configure failure
+	  when not installed -- better than compilation errors.
+	  - Generate blocxx.pc in configure / AC_OUTPUT
+
+2009-09-17 02:08  kpharris
+
+	* examples/threads/threads.cpp: Fixing use of the CmdLineParser.
+	  This dumps core on my linux box (no options to the executable)
+	  while cancelling the threads, so I'll need to investigate.
+
+2009-09-17 01:54  kpharris
+
+	* examples/cmdLineParser/cmdLineParser.cpp,
+	  src/blocxx/CmdLineParser.cpp, src/blocxx/CmdLineParser.hpp,
+	  test/unit/CmdLineParserTestCases.cpp: Going through the examples,
+	  I found that the cmdLineParser example no longer worked. Updating
+	  both the example and the CmdLineParser to reflect the intent of
+	  the grouping argument with no short or long option. We get better
+	  output for these grouping options as a bonus too.
+
+2009-09-17 01:52  kpharris
+
+	* src/blocxx/CommonFwd.hpp, src/blocxx/DelayedFormat.hpp: Minor
+	  tweaks to doxygen output files.
+
+2009-09-16 23:58  kpharris
+
+	* src/blocxx/MD5.hpp: Removing a * from a comment that causes the
+	  entire BLOCXX_NAMESPACE to appear with that comment in Doxygen
+	  generated docs.
+
+2009-09-16 23:57  kpharris
+
+	* bootstrap.sh: Jumped the gun a little with the automake version
+	  switch. Automake-1.10+ does in fact cause breakage due to some
+	  dependency changes. I will have to look at that later.
+
+2009-09-16 22:46  kpharris
+
+	* README: Writing verbiage for the README.
+
+2009-09-16 20:31  kpharris
+
+	* acconfig.h, bootstrap.sh, configure.in: Removing acconfig.h,
+	  moving the config.h generation into the configure script.
+	  Updating the blocxx version number. Removing a large number of
+	  autoconf/automake warnings. This now works warning-free with
+	  automake 1.9 and 1.10, providing none of the installed packages
+	  (like gettext) introduce warnings.
+
+2009-09-16 20:21  kpharris
+
+	* acinclude.m4: Updating a few macros to remove warnings. Setting
+	  the TZ variable in the mktime configure tests so it should not
+	  generate improper results for negative time offsets.
+
+2009-09-16 01:12  kpharris
+
+	* INSTALL: Updating build requirements.
+
+2009-09-16 01:09  kpharris
+
+	* INSTALL, configure.in: The error check was supposed to be
+	  MATCHLIMIT and not NOMATCH when detecting broken pcre installs.
+
+2009-09-16 00:56  kpharris
+
+	* configure.in, src/blocxx/PerlRegEx.cpp, src/blocxx/PerlRegEx.hpp:
+	  Using a single #define for the PRCE regex. Adding a configure
+	  test to make sure more than the version function is available.
+
+2009-09-14 23:30  kpharris
+
+	* acconfig.h, configure.in, src/blocxx/DelayedFormat.hpp,
+	  src/blocxx/LogAppenderScope.hpp,
+	  src/blocxx/LogMessagePatternFormatter.hpp,
+	  src/blocxx/MTQueue.hpp, src/blocxx/Mutex.hpp,
+	  src/blocxx/NonRecursiveMutex.hpp, src/blocxx/RWLocker.hpp,
+	  src/blocxx/RefToValue.hpp, src/blocxx/ScopeLogger.hpp,
+	  src/blocxx/Semaphore.hpp, src/blocxx/StringStream.hpp,
+	  src/blocxx/Thread.hpp, src/blocxx/ThreadCounter.hpp,
+	  src/blocxx/dlSharedLibrary.hpp: Adding a
+	  BLOCXX_FUNCTION_NOT_IMPLEMENTED macro for C++0x support of
+	  deleted functions. Some minor whitespace changes (deletion of
+	  trailing whitespace) are also present.
+
+2009-09-14 23:29  kpharris
+
+	* src/blocxx/Thread.cpp: Peeking at the error queue before cleaning
+	  it. This seems to avoid a potential crash.
+
+2009-09-14 22:57  kpharris
+
+	* src/blocxx/MemoryBarrier.hpp: Using the gcc-provides
+	  __sync_synchronize() for gcc 4.1+. A fix for bug tracker
+	  #2799341.
+
+2009-09-11 01:46  kpharris
+
+	* AUTHORS, COPYING, INSTALL, LICENSE: Minor cleanup, and copyright
+	  updates to non-source files. Updating AUTHORS.
+
+2009-09-10 22:05  kpharris
+
+	* test/CppUnit/TestCase.cpp, test/CppUnit/TestCase.hpp: Some test
+	  framework changes that improve the failure output for
+	  unitAssert{Less,Greater,Equal,...}.
+
+2009-09-10 20:34  kpharris
+
+	* src/blocxx/IPCMutex.cpp, src/blocxx/IPCMutex.hpp,
+	  test/unit/IPCMutexTestCases.cpp: A better fix for the IPCMutex
+	  disabling. This allows it to work on 2.4 kernels where it does
+	  seem to work.
+
+2009-09-10 20:07  kpharris
+
+	* src/blocxx/Makefile.am, test/unit, test/unit/Makefile.am: Fixes
+	  for "make distcheck".
+
+2009-09-10 20:01  kpharris
+
+	* src/blocxx/IPCMutex.cpp, src/blocxx/IPCMutex.hpp,
+	  test/unit/IPCMutexTestCases.cpp: The IPCMutex does not work on
+	  new linux kernels. Since I am not aware of anyone using it, it is
+	  commented out for now. If nobody fixes it soon, we will probably
+	  delete it.
+
+2009-08-25 21:04  kpharris
+
+	* Makefile-shared-lib.inc: Restoring the static link capabilities
+	  so it can still be used when needed.
+
+2009-08-21 20:20  mdbess
+
+	* src/blocxx/PathSecurity.cpp: Removing the dir_specified() method;
+	  the method seems unnecessary for security, it was only being used
+	  in 1 place, and the usage of it was causing a bug.
+	  This fixes a bug where the CIMOM crashed if any of the paths were
+	  symlinks containing one or more extra '/'s. The extra '/'s were
+	  causing the PartiallyResolvedPath to be marked a directory when
+	  the symlink was resolved. This in turn caused an exception to be
+	  thrown if we were actually examining a file, not a directory.
+
+2009-08-10 21:52  kpharris
+
+	* Makefile-shared-lib.inc, configure.in,
+	  src/blocxx/FileAppender.cpp, src/blocxx/MD5.cpp,
+	  src/blocxx/MD5.hpp, src/blocxx/Makefile.am,
+	  src/blocxx/String.cpp, src/blocxx/String.hpp,
+	  src/blocxx/StringConversionImpl.cpp,
+	  src/blocxx/StringConversionImpl.hpp,
+	  src/blocxx/StringConversionImpl.re, src/blocxx/ThreadImpl.cpp,
+	  src/blocxx/ThreadOnce.hpp, test/CppUnit/TestCase.hpp,
+	  test/unit/StringTestCases.cpp, test/unit/StringTestCases.hpp:
+	  Merging some changes to more properly build on AIX with shared
+	  libraries. This was done for gcc 4.2.4
+	  (http://www.oss4aix.org/download/latest/aix51/).
+
+2009-07-20 08:59  mtomaschewski
+
+	* configure.in, examples/sharedLibs/SharedLibMakefile: - Changed to
+	  use -pthread instead of -lpthread (gcc asneeded)
+
+2009-07-20 08:52  mtomaschewski
+
+	* src/blocxx/BaseStreamBuffer.cpp, src/blocxx/DataStreams.cpp,
+	  src/blocxx/IstreamBufIterator.hpp, src/blocxx/StringStream.hpp,
+	  src/blocxx/TempFileStream.cpp: - Added inclusion of cstdio to
+	  compile with gcc 4.4
+
+2009-06-20 00:54  aciddeath
+
+	* src/blocxx/Exception.cpp, src/blocxx/Exception.hpp,
+	  src/blocxx/IntrusiveReference.hpp, src/blocxx/LazyGlobal.hpp,
+	  src/blocxx/Process.cpp: Catch and log exceptions in
+	  IntrusiveReference and LazyGlobal destructors.
+	  Also improve handling for zombie processes.
+
+2009-06-15 21:23  aciddeath
+
+	* src/blocxx/ClockImpl.cpp, src/blocxx/CommonFwd.hpp,
+	  src/blocxx/Makefile.am, src/blocxx/ThreadSafeProcess.cpp,
+	  src/blocxx/ThreadSafeProcess.hpp,
+	  test/unit/IPCMutexTestCases.cpp, test/unit/IPCMutexTestCases.hpp,
+	  test/unit/InetAddressTestCases.cpp,
+	  test/unit/InetAddressTestCases.hpp,
+	  test/unit/MTQueueTestCases.cpp,
+	  test/unit/ThreadOnceTestCases.cpp: Move some tests and
+	  ThreadSafeProcess from OpenWBEM. Also cleanup include style.
+
+2009-06-05 19:07  kpharris
+
+	* src/blocxx/SSLSocketImpl.cpp, src/blocxx/SSLSocketImpl.hpp,
+	  src/blocxx/SocketBaseImpl.cpp, src/blocxx/SocketBaseImpl.hpp,
+	  src/blocxx/SocketImpl.cpp, src/blocxx/Win32SocketBaseImpl.cpp:
+	  Fixing a file descriptor leak in the socket implementation. This
+	  only leaked because some of the internals of a class were being
+	  modified by a subclass. I have removed a useless state variable
+	  and made the internals private. Also making the SSL socket
+	  implementation properly clean up so a double free should not
+	  happen.
+
+2009-06-05 19:04  kpharris
+
+	* src/blocxx/StrictWeakOrdering.hpp: More minor C++0x additions.
+
+2009-05-05 13:28  kpharris
+
+	* src/blocxx/DescriptorUtils_noexcept.cpp: Warning removal (type
+	  punning).
+
+2009-05-05 13:19  kpharris
+
+	* examples/iconv/iconv_test1.cpp: Warning removal
+
+2009-04-28 01:16  kpharris
+
+	* test/CppUnit/TestCase.hpp, test/CppUnit/TestResult.cpp,
+	  test/CppUnit/TextTestResult.cpp: Syncing up the test library in
+	  openwbem and blocxx. We really need a blocxx test library to
+	  avoid this kind of thing.
+
+2009-04-27 23:54  kpharris
+
+	* test/unit/run_make_check.sh, test/unit/run_make_check.sh.in,
+	  test/unit/set_test_libpath.sh: Reverting last change. Bad merge.
+
+2009-04-27 23:29  kpharris
+
+	* test/unit/run_make_check.sh, test/unit/run_make_check.sh.in,
+	  test/unit/set_test_libpath.sh: Auto-generating the
+	  run_make_check.sh.
+
+2009-04-27 23:19  kpharris
+
+	* src/blocxx/Format.cpp: Fixing a warning that causes a failure to
+	  compile with -Wall on some platforms.
+
+2009-03-28 02:20  kpharris
+
+	* test/unit/Makefile.am, test/unit/TestFrameworkTestCases.cpp:
+	  Adding a test framework test file (which I just forgot to add).
+
+2009-03-28 02:18  kpharris
+
+	* test/CppUnit/TestCase.hpp, test/CppUnit/TextTestResult.cpp,
+	  test/unit/.cvsignore, test/unit/Makefile.am: Test modifications.
+	  The test names can be displayed by setting an environment
+	  variable (change from Richard Holden). Adding a "one of" test to
+	  test a value against multiple others. Cleaning up the test
+	  results a little.
+
+2009-02-26 18:52  kpharris
+
+	* src/blocxx/TimeDuration.hpp: Removing part of a comment that is
+	  incorrect. This deleted portion comes from an earlier version of
+	  the TimeDuration that contained seconds as a time_t and
+	  microseconds as an Int32.
+
+2009-02-26 18:37  joelsmith
+
+	* src/blocxx/DivRem.hpp: Fix for compiler detection of integer
+	  division style. Fixes divFloor and
+	  remFloor on systems that round down instead of to zero on integer
+	  division.
+
+2009-02-13 19:24  joelsmith
+
+	* src/blocxx/NullLogger.cpp, src/blocxx/NullLogger.hpp,
+	  src/blocxx/ThreadPool.cpp, src/blocxx/ThreadPool.hpp,
+	  test/unit/AtomicOpsTestCases.cpp: Reverting bonehead commits from
+	  r383
+
+2009-02-13 01:14  joelsmith
+
+	* ., INSTALL, run_tests.sh, src/blocxx/NullLogger.cpp,
+	  src/blocxx/NullLogger.hpp, src/blocxx/ThreadPool.cpp,
+	  src/blocxx/ThreadPool.hpp, test/unit,
+	  test/unit/AtomicOpsTestCases.cpp,
+	  test/unit/FileSystemTestCases.cpp: Random cleanup -- fixed docs
+	  to reference bootstrap.sh instead of
+	  cvsbootstrap.sh, added a NullLogger instance getter for use as a
+	  param default, deprecated a ThreadPool ctor that was mostly a
+	  duplicate, fixed various typos and a test case.
+
+2009-01-16 01:05  kpharris
+
+	* test/unit/.cvsignore, test/unit/Makefile.am,
+	  test/unit/UnitMain.cpp, test/unit/run_make_check.sh,
+	  test/unit/set_test_libpath.sh: Improving the building and
+	  execution of the unit tests. Moving the CmdLineParserTestCases
+	  out of UnitMain.
+
+2009-01-16 01:04  kpharris
+
+	* src/blocxx/CmdLineParser.cpp, src/blocxx/CmdLineParser.hpp,
+	  test/unit/CmdLineParserTestCases.cpp: Improving the CmdLineParser
+	  to be more dynamic, reusable, and allow hidden command line
+	  parameters in the Usage() output. Source compatibility is
+	  maintained.
+
+2009-01-16 01:01  kpharris
+
+	* Makefile-executable.inc: Another OW helper makefile for
+	  simplifying the creation of executables.
+
+2009-01-16 00:58  kpharris
+
+	* src/blocxx/LogAppender.cpp, src/blocxx/LogAppender.hpp: Adding a
+	  function to create a StringArray suitable for use as the
+	  categories in the constructor of a LogAppender. This will include
+	  all log levels at or below the level requested.
+
+2009-01-16 00:49  kpharris
+
+	* test/CppUnit/AutoTest.cpp, test/CppUnit/AutoTest.hpp,
+	  test/CppUnit/Makefile.am: Adding test improvements from OpenWBEM.
+	  This allows the creation of auto unit tests -- define them and
+	  they automatically run.
+
+2009-01-16 00:44  kpharris
+
+	* acinclude.m4, configure.in: Applying fixes from OpenWBEM.
+
+2008-11-07 23:52  kpharris
+
+	* acinclude.m4, configure.in, src/blocxx/Condition.cpp,
+	  src/blocxx/DateTime.cpp, src/blocxx/ExceptionIds.hpp,
+	  src/blocxx/Format.cpp, src/blocxx/Format.hpp,
+	  src/blocxx/HashMap.hpp, src/blocxx/PosixExec.cpp,
+	  src/blocxx/PosixPathSecurity.cpp, src/blocxx/Select.cpp,
+	  test/unit/FormatTestCases.cpp, test/unit/FormatTestCases.hpp,
+	  test/unit/ScopeLoggerTestCases.cpp,
+	  test/unit/TimeoutTimerTestCases.cpp,
+	  test/unit/TmUtils_timeGmTestCases.cpp: Applying some changes so
+	  this can be built with gcc 4.3 (warning removal).
+	  
+	  Adding some c++0x variadic templates to Format so any number of
+	  arguments can
+	  be supplied when supported. This was also modified to allow
+	  format modifiers
+	  to be specified. The format modifiers do not break compatibility
+	  because
+	  previously only [1-9] was allowed after a '%'.
+
+2008-10-08 23:00  nuffer
+
+	* test/unit/MTQueueTestCases.cpp: Fix an unreliable test that was
+	  relying on actual run times for MTQueue.
+
+2008-10-08 16:16  nuffer
+
+	* src/blocxx/ThreadImpl.cpp: Only unblock SIGUSR1 and leave the
+	  rest of the signal mask alone.
+
+2008-10-08 16:16  nuffer
+
+	* src/blocxx/Thread.cpp: Call ERR_clear_error() before
+	  ERR_remove_state() to prevent a potential memory leak.
+
+2008-10-08 16:15  nuffer
+
+	* src/blocxx/Condition.cpp: Add error checking of pthread_cond_*
+	  functions.
+
+2008-09-29 19:02  mdbess
+
+	* src/blocxx/SSLCtxMgr.cpp, src/blocxx/SSLCtxMgr.hpp: Added support
+	  for an in-memory trust store.
+
+2008-09-15 22:45  nuffer
+
+	* acinclude.m4, configure.in, src/blocxx/File.hpp,
+	  src/blocxx/FileSystem.hpp,
+	  src/blocxx/LogMessagePatternFormatter.cpp, src/blocxx/MD5.cpp,
+	  src/blocxx/MD5.hpp, src/blocxx/NullLogger.cpp,
+	  src/blocxx/NullLogger.hpp, src/blocxx/PosixFileSystem.cpp,
+	  src/blocxx/RWLocker.cpp, src/blocxx/RWLocker.hpp,
+	  src/blocxx/SSLCtxMgr.cpp, src/blocxx/SSLCtxMgr.hpp,
+	  src/blocxx/Socket.cpp, src/blocxx/Socket.hpp,
+	  src/blocxx/SocketStreamBuffer.cpp,
+	  src/blocxx/SocketStreamBuffer.hpp, src/blocxx/TempFileStream.cpp,
+	  src/blocxx/TempFileStream.hpp, test/unit/DateTimeTestCases.cpp,
+	  test/unit/LazyGlobalTestCases.cpp: Fix some issues with the
+	  tests. Fix warnings about implicit virtual destructors.
+
+2008-09-02 20:47  nuffer
+
+	* src/blocxx/StringStream.cpp, src/blocxx/StringStream.hpp: Fix
+	  warning about implicit virtual destructor.
+
+2008-09-02 18:40  nuffer
+
+	* acinclude.m4, configure.in, src/blocxx/Clock.hpp,
+	  src/blocxx/ClockImpl.cpp, src/blocxx/ClockImpl.hpp,
+	  src/blocxx/CommonFwd.hpp, src/blocxx/Condition.cpp,
+	  src/blocxx/DateTime.cpp, src/blocxx/DateTime.hpp,
+	  src/blocxx/DivRem.hpp, src/blocxx/MTQueue.cpp,
+	  src/blocxx/MTQueue.hpp, src/blocxx/Makefile.am,
+	  src/blocxx/Process.cpp, src/blocxx/RWLocker.cpp,
+	  src/blocxx/RandomNumber.cpp, src/blocxx/RandomNumber.hpp,
+	  src/blocxx/String.cpp, src/blocxx/String.hpp,
+	  src/blocxx/TimeConstants.cpp, src/blocxx/TimeConstants.hpp,
+	  src/blocxx/TimeDuration.cpp, src/blocxx/TimeDuration.hpp,
+	  src/blocxx/TimePeriod.cpp, src/blocxx/TimePeriod.hpp,
+	  src/blocxx/TimeUtils.cpp, src/blocxx/TimeUtils.hpp,
+	  src/blocxx/TimeoutTimer.cpp, src/blocxx/TmUtils.cpp,
+	  src/blocxx/TmUtils.hpp, test/CppUnit/TestCaller.hpp,
+	  test/CppUnit/TestCase.cpp, test/CppUnit/TestCase.hpp,
+	  test/CppUnit/TestResult.cpp, test/CppUnit/TestResult.hpp,
+	  test/CppUnit/TestSuite.hpp, test/CppUnit/TextTestResult.cpp,
+	  test/CppUnit/TextTestResult.hpp,
+	  test/unit/ConditionTestCases.cpp,
+	  test/unit/DateTimeTestCases.cpp, test/unit/DateTimeTestCases.hpp,
+	  test/unit/DivRemTestCases.cpp, test/unit/DivRemTestCases.hpp,
+	  test/unit/FileSystemTestCases.cpp,
+	  test/unit/GenericTestCases.cpp.tmpl,
+	  test/unit/GenericTestCases.hpp.tmpl,
+	  test/unit/IPCMutexTestCases.cpp,
+	  test/unit/LazyGlobalTestCases.cpp,
+	  test/unit/MTQueueTestCases.cpp, test/unit/MTQueueTestCases.hpp,
+	  test/unit/Makefile.am, test/unit/PathSecurityTestCases.cpp,
+	  test/unit/RWLockerTestCases.cpp,
+	  test/unit/RandomNumberTestCases.cpp,
+	  test/unit/RandomNumberTestCases.hpp,
+	  test/unit/SocketUtilsTestCases.cpp,
+	  test/unit/ThreadPoolTestCases.cpp, test/unit/ThreadTestCases.cpp,
+	  test/unit/TimeDurationTestCases.cpp,
+	  test/unit/TimeDurationTestCases.hpp,
+	  test/unit/TimePeriodTestCases.cpp,
+	  test/unit/TimePeriodTestCases.hpp,
+	  test/unit/TimeoutTimerTestCases.cpp,
+	  test/unit/TmUtils_normTmTestCases.cpp,
+	  test/unit/TmUtils_normTmTestCases.hpp,
+	  test/unit/TmUtils_timeGmTestCases.cpp,
+	  test/unit/TmUtils_timeGmTestCases.hpp, test/unit/UnitMain.cpp,
+	  test/unit/newtest.sh: merged branches/2.0 changes r352:367 into
+	  the trunk.
+
+2008-07-22 18:33  bartw
+
+	* src/blocxx/SSLCtxMgr.cpp: more secure SSL settings
+
+2008-07-17 19:51  nuffer
+
+	* acinclude.m4, configure.in, src/blocxx/CommonFwd.hpp,
+	  src/blocxx/File.hpp, src/blocxx/FileInformation.cpp,
+	  src/blocxx/FileInformation.hpp, src/blocxx/FileSystem.hpp,
+	  src/blocxx/FileSystemMockObject.cpp,
+	  src/blocxx/FileSystemMockObject.hpp, src/blocxx/Makefile.am,
+	  src/blocxx/Mutex.cpp, src/blocxx/PathSecurity.cpp,
+	  src/blocxx/PathSecurity.hpp, src/blocxx/PosixFile.cpp,
+	  src/blocxx/PosixFileSystem.cpp, src/blocxx/PosixFileSystem.hpp,
+	  src/blocxx/PosixPathSecurity.cpp, src/blocxx/String.cpp,
+	  src/blocxx/UUID.hpp, src/blocxx/WinPathSecurity.cpp,
+	  test/unit/FileSystemTestCases.cpp,
+	  test/unit/FileSystemTestCases.hpp, test/unit/FileTestCases.cpp,
+	  test/unit/FileTestCases.hpp, test/unit/Makefile.am,
+	  test/unit/StringTestCases.cpp, test/unit/UnitMain.cpp: Merged
+	  branches/2.0 changes r281:352 into the trunk.
+
+2007-11-07 08:02  mtomaschewski
+
+	* AUTHORS: - Added Norm Paxton and Peter Dimov to the AUTHORS file
+
+2007-11-05 18:47  mtomaschewski
+
+	* src/blocxx/PerlRegEx.cpp, src/blocxx/SecureRand.cpp: - Added
+	  missed includes mentioned by gcc 4.3
+
+2007-11-05 18:46  mtomaschewski
+
+	* examples/iconv/iconv_test1.cpp, test/CppUnit/TestCase.cpp,
+	  test/CppUnit/TextTestResult.cpp,
+	  test/unit/FileSystemTestCases.cpp,
+	  test/unit/IPCMutexTestCases.cpp,
+	  test/unit/StackTraceTestCases.cpp, test/unit/StringTestCases.cpp,
+	  test/unit/ThreadPoolTestCases.cpp,
+	  test/unit/UTF8UtilsTestCases.cpp: - Added missed includes
+	  mentioned by gcc 4.3
+
+2007-11-05 18:27  mtomaschewski
+
+	* configure.in: - Changed to define BLOCXX_VERSION_NUMBER instead
+	  of BLOCXX_VERSION
+	  to the numeric version and keep BLOCXX_VERSION as a version
+	  string
+	  as in blocxx 1.0.
+
+2007-11-05 11:28  mtomaschewski
+
+	* src/blocxx/IOIFCStreamBuffer.cpp,
+	  src/blocxx/LogMessagePatternFormatter.cpp,
+	  src/blocxx/SafeCString.hpp, src/blocxx/SecureRand.cpp: - Added
+	  missed includes mentioned by gcc 4.3
+
+2007-10-01 02:12  nuffer
+
+	* src/blocxx/FileSystem.hpp, src/blocxx/FileSystemMockObject.hpp,
+	  src/blocxx/PathSecurity.hpp, src/blocxx/Paths.hpp,
+	  src/blocxx/PosixFileSystem.cpp, src/blocxx/Secure.cpp,
+	  src/blocxx/WinExec.cpp, src/blocxx/WinPathSecurity.cpp,
+	  src/blocxx/WinUnnamedPipe.cpp,
+	  test/unit/PathSecurityTestCases.cpp: Windows porting changes.
+
+2007-09-17 21:23  bartw
+
+	* src/blocxx/SocketUtils.cpp: pass correct parameter to inet_ntop
+
+2007-09-05 00:51  kpharris
+
+	* acinclude.m4: Adding a ":" for the body of a currently unused
+	  else clause. Removing a single quote that confuses syntax
+	  highlighting. Changing a "grep -q" into a normal grep redirected
+	  to /dev/null.
+
+2007-08-24 12:55  nuffer
+
+	* build/vc2005/blocxx/libblocxx.vcproj,
+	  build/vc2005/test/blocxxtest.vcproj,
+	  build/vc2005/test/runMultiProcessLogger/runMultiProcessLogger.vcproj,
+	  win_build.bat, win_build_env.bat, win_build_tests.bat,
+	  win_run_tests.bat: Windows porting changes from Valery Grikyan.
+	  Windows build system adjustments.
+
+2007-08-24 12:54  nuffer
+
+	* src/blocxx/Makefile.am, src/blocxx/PathSecurity.cpp,
+	  src/blocxx/PathSecurity.hpp, src/blocxx/PosixPathSecurity.cpp:
+	  Windows porting changes from Valery Grikyan.
+	  Divided PathSecurity code into four files
+	  PathSecurity.cpp
+	  PathSecurity.hpp
+	  PosixPathSecurity.cpp
+	  WinPathSecurity.cpp
+	  PathSecurity.cpp still contains three small places with #ifdef
+	  BLOCXX_WIN32
+	  in order not to duplicate code in Win and Posix versions.
+	  
+	  WinPathSecurity.cpp is not acceptable yet, so isn't added in this
+	  commit.
+
+2007-08-24 12:53  nuffer
+
+	* src/blocxx/SocketUtils.cpp: Windows porting changes from Valery
+	  Grikyan.
+	  Handle the lack of IPv6 functions.
+
+2007-08-24 12:52  nuffer
+
+	* src/blocxx/UserUtils.cpp, src/blocxx/UserUtils.hpp: Windows
+	  porting changes from Valery Grikyan.
+
+2007-08-24 12:52  nuffer
+
+	* src/blocxx/NetworkTypes.hpp: Windows porting changes from Valery
+	  Grikyan.
+	  Change Select_t operator< to compare using the event.
+
+2007-08-24 12:50  nuffer
+
+	* src/blocxx/DescriptorUtils_noexcept.cpp, src/blocxx/Process.cpp,
+	  src/blocxx/WinExec.cpp, src/blocxx/WinProcessUtils.cpp,
+	  src/blocxx/WinProcessUtils.hpp: Windows porting changes from
+	  Valery Grikyan.
+	  "I added new function WinUtils::GetProcessIdNT() instead of XP
+	  API
+	  GetProcessId() to run code on Win2000."
+
+2007-08-06 04:16  nuffer
+
+	* build/vc2005/test/TestTryLockChildProcess,
+	  build/vc2005/test/TestTryLockChildProcess/TestTryLockChildProcess.vcproj,
+	  build/vc2005/test/blocxxtest.sln,
+	  build/vc2005/test/blocxxtest.vcproj,
+	  build/vc2005/test/runMultiProcessLogger/runMultiProcessLogger.vcproj,
+	  src/blocxx/DescriptorUtils_noexcept.cpp,
+	  src/blocxx/FileSystem.hpp, src/blocxx/FileSystemMockObject.cpp,
+	  src/blocxx/FileSystemMockObject.hpp,
+	  src/blocxx/MultiProcessFileAppender.cpp,
+	  src/blocxx/PosixFileSystem.cpp, src/blocxx/Process.cpp,
+	  src/blocxx/SecureRand.cpp, src/blocxx/Types.hpp,
+	  src/blocxx/UserUtils.cpp, src/blocxx/UserUtils.hpp,
+	  src/blocxx/WinExec.cpp, src/blocxx/WinUnnamedPipe.cpp,
+	  src/blocxx/WinUnnamedPipe.hpp, test/unit/FileSystemTestCases.cpp,
+	  test/unit/PathSecurityTestCases.cpp,
+	  test/unit/Win32/ChildProcess.cpp,
+	  test/unit/Win32/TestTryLockChildProcess.cpp: Windows porting.
+
+2007-07-27 18:45  bartw
+
+	* src/blocxx/SocketAddress.cpp, src/blocxx/SocketAddress.hpp,
+	  src/blocxx/SocketUtils.cpp: replace non-thread safe inet_ntoa
+	  with inet_ntop
+
+2007-07-11 05:01  nuffer
+
+	* Makefile-shared-lib-inst.inc, Makefile.am, configure.in,
+	  examples/intrusiveRef/COWIntrusiveRefExample.cpp,
+	  src/blocxx/IstreamBufIterator.hpp, src/blocxx/Makefile.am,
+	  src/blocxx/MemTracer.cpp, src/blocxx/PathSecurity.cpp,
+	  src/blocxx/Thread.cpp, src/blocxx/ThreadBarrier.hpp,
+	  src/blocxx/ThreadImpl.cpp, src/blocxx/ThreadImpl.hpp,
+	  src/blocxx/ThreadPool.cpp, test/unit/ExecTestCases.cpp,
+	  test/unit/IstreamBufIteratorTestCases.cpp,
+	  test/unit/IstreamBufIteratorTestCases.hpp, test/unit/Makefile.am,
+	  test/unit/MemTracerTestCases.cpp,
+	  test/unit/ThreadPoolTestCases.cpp,
+	  test/unit/ThreadPoolTestCases.hpp, test/unit/UnitMain.cpp,
+	  test/unit/UnnamedPipeTestCases.cpp: Merged branch/2.0 changes
+	  r281:319 into the trunk.
+
+2007-07-11 04:00  nuffer
+
+	* build/vc2005/test/ChildProcess/ChildProcess.vcproj,
+	  build/vc2005/test/FillOutputBuffer/FillOutputBuffer.vcproj,
+	  build/vc2005/test/LazyGlobalTestLibrary,
+	  build/vc2005/test/LazyGlobalTestLibrary/LazyGlobalTestLibrary.vcproj,
+	  build/vc2005/test/Makefile, build/vc2005/test/blocxxtest.sln,
+	  build/vc2005/test/blocxxtest.vcproj,
+	  build/vc2005/test/runMultiProcessLogger,
+	  build/vc2005/test/runMultiProcessLogger/runMultiProcessLogger.vcproj,
+	  src/blocxx/BloCxx.cpp, src/blocxx/LogAppender.cpp,
+	  src/blocxx/LogAppender.hpp, src/blocxx/WinExec.cpp,
+	  src/blocxx/WinUnnamedPipe.cpp,
+	  test/unit/LazyGlobalTestLibrary.cpp,
+	  test/unit/LoggerTestCases.cpp, test/unit/Win32/ChildProcess.cpp:
+	  A few windows porting changes.
+
+2007-07-02 17:27  bartw
+
+	* src/blocxx/PosixExec.cpp: fixed compiler warning
+
+2007-05-25 05:06  nuffer
+
+	* src/blocxx/Exec.cpp, src/blocxx/Exec.hpp, src/blocxx/Makefile.am,
+	  src/blocxx/NetworkTypes.hpp, src/blocxx/PosixExec.cpp,
+	  src/blocxx/PosixUnnamedPipe.cpp, src/blocxx/PosixUnnamedPipe.hpp,
+	  src/blocxx/SSLSocketImpl.cpp, src/blocxx/Select.cpp,
+	  src/blocxx/ServerSocketImpl.cpp, src/blocxx/SocketImpl.cpp,
+	  src/blocxx/UnnamedPipe.hpp, src/blocxx/Win32SocketBaseImpl.cpp,
+	  src/blocxx/WinExec.cpp, src/blocxx/WinExec.hpp,
+	  src/blocxx/WinUnnamedPipe.cpp, src/blocxx/WinUnnamedPipe.hpp,
+	  test/unit/ExecTestCases.cpp, test/unit/UnitMain.cpp,
+	  test/unit/Win32/ChildProcess.cpp: Windows porting changes thanks
+	  to Andrey Mukha.
+
+2007-05-22 21:02  mdbess
+
+	* src/blocxx/SSLCtxMgr.cpp: Fixing an uninitialized variable
+	  warning.
+
+2007-05-22 20:52  mdbess
+
+	* src/blocxx/SSLCtxMgr.cpp: Fixing a warning about an uninitialized
+	  variable.
+
+2007-05-21 23:29  ksvanhorn
+
+	* src/blocxx/String.cpp, src/blocxx/String.hpp,
+	  test/unit/StringTestCases.cpp, test/unit/StringTestCases.hpp:
+	  Fix: numeric conversions on empty string should throw.
+
+2007-05-21 13:26  nuffer
+
+	* build/vc2005/blocxx/libblocxx.vcproj,
+	  build/vc2005/test/ChildProcess/ChildProcess.vcproj,
+	  build/vc2005/test/FillOutputBuffer/FillOutputBuffer.vcproj,
+	  src/blocxx/DescriptorUtils_noexcept.cpp,
+	  src/blocxx/DescriptorUtils_noexcept.hpp,
+	  src/blocxx/LogAppender.cpp, src/blocxx/LogAppender.hpp,
+	  src/blocxx/WinUnnamedPipe.cpp, test/unit/Win32/ChildProcess.cpp:
+	  Windows porting changes. Thanks to Andrey Mukha
+	  
+	  - The functionality responsible for passing/receiving descriptors
+	  was moved to the DescriptorUtils_noexcept.cpp. The code turned
+	  out not very simple as in any case we need to process
+	  asynchronous I/O because the pipes are created with overlapped
+	  flag.
+	  
+	  - The file BloCxx.cpp with function DllMain() was added
+	  
+	  - Some files with duplicated content (as far as I see because of
+	  duplications in patches) were corrected. For instance,
+	  ChildProcess.vcproj, FillOutputBuffer.vcproj, etc.
+	  
+
+2007-05-21 13:13  nuffer
+
+	* src/blocxx/PosixExec.cpp, src/blocxx/PosixUnnamedPipe.cpp,
+	  src/blocxx/SyslogAppender.cpp, src/blocxx/ThreadImpl.cpp: Porting
+	  changes to NCR. Thanks to Valery Grikyan.
+
+2007-05-21 03:42  nuffer
+
+	* bootstrap.sh: Use the same version of aclocal as automake.
+
+2007-05-20 23:04  nuffer
+
+	* src/blocxx/Exec.cpp, src/blocxx/Exec.hpp, src/blocxx/Makefile.am:
+	  Revert the change which broke the OpenWBEM monitor tests.
+
+2007-05-09 20:50  ksvanhorn
+
+	* src/blocxx/Condition.hpp, src/blocxx/NonRecursiveMutex.hpp,
+	  src/blocxx/NonRecursiveMutexLock.hpp, src/blocxx/Thread.hpp,
+	  src/blocxx/ThreadBarrier.hpp: Added some comments documenting
+	  exception behavior.
+
+2007-05-08 14:35  mtomaschewski
+
+	* src/blocxx/Makefile.am: - Added PosixExec.hpp to header file list
+	  (make dist)
+
+2007-05-08 13:43  mtomaschewski
+
+	* test/unit/FileSystemTestCases.cpp: - Added unitAssert to symlink
+	  operations to catch error
+	  cases earlier and to avoid build failures with -Werror
+
+2007-05-07 23:58  nuffer
+
+	* acinclude.m4: Cleanup blocxx_header_test_file.h
+
+2007-05-07 23:43  nuffer
+
+	* build/vc2005/test/ChildProcess,
+	  build/vc2005/test/ChildProcess/ChildProcess.vcproj,
+	  build/vc2005/test/FillOutputBuffer,
+	  build/vc2005/test/FillOutputBuffer/FillOutputBuffer.vcproj,
+	  src/blocxx/PosixExec.cpp, src/blocxx/PosixExec.hpp,
+	  src/blocxx/WinExec.cpp, src/blocxx/WinExec.hpp,
+	  src/blocxx/WinProcessUtils.cpp, src/blocxx/WinProcessUtils.hpp,
+	  src/blocxx/WinUnnamedPipe.cpp, src/blocxx/WinUnnamedPipe.hpp,
+	  test/unit/Win32, test/unit/Win32/ChildProcess.cpp: Windows
+	  porting changes part 2 (Adding new files). Thanks to Andrey
+	  Mukha.
+
+2007-05-07 23:34  nuffer
+
+	* acconfig.h, configure.in, src/blocxx/Condition.cpp,
+	  src/blocxx/DescriptorUtils_noexcept.cpp,
+	  src/blocxx/Exception.cpp, src/blocxx/Exec.cpp,
+	  src/blocxx/LogAppender.cpp, src/blocxx/MutexImpl.cpp,
+	  src/blocxx/NetworkTypes.hpp,
+	  src/blocxx/NonRecursiveMutexImpl.cpp, src/blocxx/RWLocker.cpp,
+	  src/blocxx/Secure.cpp, src/blocxx/SecureRand.cpp,
+	  src/blocxx/ServerSocketImpl.cpp, src/blocxx/SignalScope.hpp,
+	  src/blocxx/SocketAddress.cpp, src/blocxx/SocketBaseImpl.cpp,
+	  src/blocxx/SocketUtils.hpp, src/blocxx/ThreadImpl.cpp,
+	  src/blocxx/ThreadImpl.hpp, src/blocxx/ThreadOnce.hpp,
+	  src/blocxx/ThreadTypes.hpp: NCR porting changes. Thanks to Valery
+	  Grikyan.
+
+2007-05-07 23:14  nuffer
+
+	* build/vc2005/blocxx/libblocxx.vcproj,
+	  build/vc2005/test/blocxxtest.sln,
+	  build/vc2005/test/blocxxtest.vcproj,
+	  src/blocxx/AppenderLogger.cpp, src/blocxx/AutoDescriptor.cpp,
+	  src/blocxx/AutoDescriptor.hpp, src/blocxx/DateTime.cpp,
+	  src/blocxx/DescriptorUtils_noexcept.cpp, src/blocxx/Exec.cpp,
+	  src/blocxx/Exec.hpp, src/blocxx/FileBuf.cpp,
+	  src/blocxx/Makefile.am, src/blocxx/PosixUnnamedPipe.cpp,
+	  src/blocxx/PosixUnnamedPipe.hpp, src/blocxx/Process.cpp,
+	  src/blocxx/Process.hpp, src/blocxx/SocketUtils.cpp,
+	  src/blocxx/System.cpp, src/blocxx/System.hpp,
+	  src/blocxx/Types.hpp, src/blocxx/UnnamedPipe.cpp,
+	  src/blocxx/UnnamedPipe.hpp, src/blocxx/Win32SocketBaseImpl.cpp,
+	  test/unit/IPCMutexTestCases.cpp, test/unit/ProcessTestCases.cpp,
+	  test/unit/UnnamedPipeTestCases.cpp: Windows porting changes.
+	  Thanks to Andrey Mukha.
+
+2007-05-03 23:14  nuffer
+
+	* configure.in: Change library version to 6.
+
+2007-05-03 23:11  nuffer
+
+	* configure.in: Version to 2.1.0 on the main trunk.
+
+2007-05-03 23:05  nuffer
+
+	* configure.in: Version to 2.0.0
+
+2007-04-27 20:27  nuffer
+
+	* test/unit/IPCMutexTestCases.cpp, test/unit/UnitMain.cpp: Only
+	  compile the IPCMutex unit test code on linux.
+
+2007-04-27 12:58  nuffer
+
+	* src/blocxx/LogMessagePatternFormatter.cpp: Avoid using an
+	  anonymous namespace to avoid a gcc 4.1.1 warning.
+
+2007-04-27 12:56  nuffer
+
+	* test/unit/ThreadPoolTestCases.cpp: Adjust for some over eager
+	  schedulers.
+
+2007-04-27 12:45  nuffer
+
+	* build/vc2005/blocxx.sln, build/vc2005/test/blocxxtest.sln: Fixing
+	  newlines.
+
+2007-04-27 03:17  nuffer
+
+	* src/blocxx/IPCMutex.cpp, src/blocxx/IPCMutex.hpp: Take out the
+	  #warning about IPCMutex being broken and just #ifdef it for only
+	  Linux.
+
+2007-04-27 01:36  kpharris
+
+	* src/blocxx/WaitpidThreadFix.cpp: Adding a return to a function
+	  that has a listed return type but never returns.
+
+2007-04-25 15:37  nuffer
+
+	* configure.in: Decouple the warning flags from the
+	  --enable-debug-mode switch. Add a --disable-Werror switch. Fix
+	  the detection of the default autoconf CFLAGS and CXXFLAGS.
+
+2007-04-25 00:43  nuffer
+
+	* src/blocxx/Logger.cpp, src/blocxx/Logger.hpp: Add
+	  stringToLogLevel and logLevelToString
+
+2007-04-25 00:04  nuffer
+
+	* src/blocxx/LogAppender.cpp, src/blocxx/SyslogAppender.cpp: A few
+	  more modifications for the DEBUG2 and DEBUG3 log levels.
+
+2007-04-24 17:10  nuffer
+
+	* src/blocxx/Thread.cpp, src/blocxx/ThreadPool.cpp,
+	  src/blocxx/dyldSharedLibraryLoader.cpp: Adjusting some log
+	  levels.
+
+2007-04-24 17:02  nuffer
+
+	* src/blocxx/LogLevel.hpp, src/blocxx/Logger.cpp,
+	  src/blocxx/Logger.hpp, test/unit/LoggerTestCases.cpp,
+	  test/unit/LoggerTestCases.hpp: Add log levels debug2 and debug3
+
+2007-04-21 00:02  nuffer
+
+	* src/blocxx/Exec.cpp: Fix a problem with
+	  StringOutputGatherer::doHandleData() that could possibly lose
+	  some data if a string contains embedded nulls.
+
+2007-04-20 23:56  nuffer
+
+	* src/blocxx/Process.cpp: In Process::waitCloseTerm(), call
+	  processStatus() to initialize m_status before checking it.
+
+2007-04-20 15:48  nuffer
+
+	* src/blocxx/SecureRand.cpp: Use the actual path of the command
+	  otherwise Path::security() will use the current working
+	  directory.
+
+2007-04-20 04:05  nuffer
+
+	* build/vc2005/test/blocxxtest.vcproj: Port to windows.
+
+2007-04-20 04:04  nuffer
+
+	* build/vc2005/blocxx/BLOCXX_config.h, src/blocxx/AtomicOps.hpp,
+	  src/blocxx/Process.cpp, src/blocxx/SecureRand.cpp,
+	  src/blocxx/System.cpp, src/blocxx/ThreadOnce.hpp,
+	  src/blocxx/ThreadTypes.hpp, src/blocxx/Types.hpp,
+	  src/blocxx/UUID.cpp, test/unit/ConditionTestCases.cpp: Port to
+	  windows.
+
+2007-04-20 03:16  nuffer
+
+	* build/vc2005/blocxx/libblocxx.vcproj,
+	  build/vc2005/test/blocxxtest.vcproj: Fix line endings.
+
+2007-04-19 21:34  nuffer
+
+	* src/blocxx/String.hpp: Clarify what qualifies as a space for the
+	  trim functions.
+
+2007-04-13 22:50  nuffer
+
+	* src/blocxx/Secure.cpp: Change minimalEnvironment() store the
+	  return value in a LazyGlobal and only create it once.
+
+2007-04-09 20:07  nuffer
+
+	* src/blocxx/PosixUnnamedPipe.cpp: Enable the OS X descriptor
+	  passing workaround always. Once 10.5 is actually released,
+	  re-test and re-enable the previous code.
+
+2007-04-06 16:53  nuffer
+
+	* src/blocxx/RefCountedPimpl.hpp: Add a comment about limitations
+	  of using this class with windows dlls. Fix variable naming
+	  (pImpl->m_impl).
+
+2007-04-05 19:06  nuffer
+
+	* src/blocxx/NetworkTypes.hpp: Put Select_t into BLOCXX_NAMESPACE.
+
+2007-04-05 00:47  nuffer
+
+	* src/blocxx/DescriptorUtils_noexcept.cpp,
+	  src/blocxx/PosixUnnamedPipe.cpp, src/blocxx/PosixUnnamedPipe.hpp,
+	  src/blocxx/UnnamedPipe.hpp, test/unit/UnnamedPipeTestCases.cpp:
+	  The descriptor passing ack workaround for OS X may need to happen
+	  on a different pipe. Changes to allow for that.
+
+2007-04-04 15:36  nuffer
+
+	* src/blocxx/LogAppender.cpp, src/blocxx/NetworkTypes.hpp,
+	  src/blocxx/SelectableIFC.hpp, src/blocxx/ThreadTypes.hpp,
+	  src/blocxx/Types.hpp, src/blocxx/UnnamedPipe.hpp: Move Select_t
+	  to NetworkTypes.hpp where it belongs. Remove the typedef for
+	  pthread_key_t from Types.hpp.
+
+2007-04-03 03:06  nuffer
+
+	* src/blocxx/Win32SocketBaseImpl.cpp: Fix compilation bug.
+
+2007-04-02 02:49  nuffer
+
+	* src/blocxx/Environ.hpp, src/blocxx/GenericRWLockImpl.hpp,
+	  src/blocxx/GlobalMutex.hpp, src/blocxx/PosixUnnamedPipe.cpp,
+	  src/blocxx/SocketAddress.cpp, src/blocxx/Win32SocketBaseImpl.cpp,
+	  test/unit/FileSystemTestCases.cpp,
+	  test/unit/PathSecurityTestCases.cpp,
+	  test/unit/UnnamedPipeTestCases.cpp: Windows porting changes.
+
+2007-03-29 14:21  nuffer
+
+	* build, build/vc2005, build/vc2005/blocxx,
+	  build/vc2005/blocxx.sln, build/vc2005/blocxx.slnenv,
+	  build/vc2005/blocxx/BLOCXX_config.h,
+	  build/vc2005/blocxx/libblocxx.vcproj, build/vc2005/test,
+	  build/vc2005/test/blocxxtest.sln,
+	  build/vc2005/test/blocxxtest.slnenv,
+	  build/vc2005/test/blocxxtest.vcproj: Adding VC2005 projects
+
+2007-03-28 08:47  nuffer
+
+	* src/blocxx/FileBuf.cpp, src/blocxx/FileBuf.hpp,
+	  src/blocxx/IFileStream.cpp, src/blocxx/IFileStream.hpp,
+	  src/blocxx/SafeCString.hpp, src/blocxx/Secure.hpp,
+	  src/blocxx/SecureRand.hpp, src/blocxx/Select.cpp,
+	  src/blocxx/ServerSocketImpl.cpp, src/blocxx/SocketUtils.cpp,
+	  src/blocxx/TimeoutTimer.cpp, src/blocxx/TimeoutTimer.hpp,
+	  src/blocxx/Win32SocketBaseImpl.cpp: More windows port changes.
+
+2007-03-26 22:52  nuffer
+
+	* src/blocxx/ThreadOnce.hpp: Enclose the int res variable in an
+	  #ifndef NDEBUG to avoid unused variable warnings.
+
+2007-03-26 22:51  nuffer
+
+	* src/blocxx/SignalUtils.cpp: Do a bit of refactoring to avoid
+	  duplicate entries in the signal list.
+
+2007-03-26 20:25  nuffer
+
+	* test/unit/UnitMain.cpp: Add option to turn on debug logging for
+	  the unit tests by specifying a second parameter.
+
+2007-03-26 20:24  nuffer
+
+	* src/blocxx/PosixUnnamedPipe.cpp,
+	  test/unit/UnnamedPipeTestCases.cpp: Implement a workaround for
+	  the OS X kernel bug with descriptor passing.
+
+2007-03-25 04:07  nuffer
+
+	* src/blocxx/AutoDescriptor.cpp, src/blocxx/AutoDescriptor.hpp,
+	  src/blocxx/CommonFwd.hpp, src/blocxx/Condition.cpp,
+	  src/blocxx/DateTime.hpp, src/blocxx/DelayedFormat.hpp,
+	  src/blocxx/DescriptorUtils.cpp,
+	  src/blocxx/DescriptorUtils_noexcept.cpp, src/blocxx/Exec.cpp,
+	  src/blocxx/Exec.hpp, src/blocxx/FileBuf.cpp,
+	  src/blocxx/LogAppender.cpp,
+	  src/blocxx/LogMessagePatternFormatter.cpp,
+	  src/blocxx/MemTracer.cpp,
+	  src/blocxx/MultiProcessFileAppender.cpp,
+	  src/blocxx/PathSecurity.cpp, src/blocxx/PosixFile.cpp,
+	  src/blocxx/PosixFileSystem.cpp, src/blocxx/PosixUnnamedPipe.cpp,
+	  src/blocxx/Process.cpp, src/blocxx/Process.hpp,
+	  src/blocxx/SSLCtxMgr.cpp, src/blocxx/SafeCString.hpp,
+	  src/blocxx/SafeCStringIO.cpp, src/blocxx/ScopeLogger.hpp,
+	  src/blocxx/Secure.cpp, src/blocxx/Secure.hpp,
+	  src/blocxx/SecureRand.cpp, src/blocxx/SecureRand.hpp,
+	  src/blocxx/ServerSocketImpl.cpp, src/blocxx/SignalUtils.cpp,
+	  src/blocxx/SignalUtils.hpp, src/blocxx/SocketAddress.cpp,
+	  src/blocxx/SocketUtils.cpp, src/blocxx/SortedVectorSet.hpp,
+	  src/blocxx/StackTrace.cpp, src/blocxx/StringBuffer.hpp,
+	  src/blocxx/StringStream.hpp, src/blocxx/ThreadOnce.cpp,
+	  src/blocxx/ThreadOnce.hpp, src/blocxx/Timeout.hpp,
+	  src/blocxx/TimeoutTimer.cpp, src/blocxx/TimeoutTimer.hpp,
+	  src/blocxx/Types.hpp, src/blocxx/UnnamedPipe.cpp,
+	  src/blocxx/UserUtils.cpp, src/blocxx/WaitpidThreadFix.cpp,
+	  src/blocxx/WaitpidThreadFix.hpp,
+	  src/blocxx/Win32SocketBaseImpl.cpp, test/CppUnit/Test.hpp,
+	  test/CppUnit/TestCase.cpp, test/unit/DateTimeTestCases.cpp,
+	  test/unit/ExecTestCases.cpp, test/unit/FileSystemTestCases.cpp,
+	  test/unit/TimeoutTimerTestCases.cpp: Port to windows. Changes
+	  thanks to Valery Grikyan
+
+2007-03-21 23:12  kpharris
+
+	* test/unit/PathSecurityTestCases.cpp,
+	  test/unit/PathSecurityTestCases.hpp: Sticking an @author tag in
+	  these. I always forget to do that...
+
+2007-03-21 22:59  kpharris
+
+	* src/blocxx/PathSecurity.cpp: Fixing the path security function to
+	  work properly for '/' and files contained therein.
+
+2007-03-21 22:57  kpharris
+
+	* test/unit/Makefile.am, test/unit/PathSecurityTestCases.cpp,
+	  test/unit/PathSecurityTestCases.hpp, test/unit/UnitMain.cpp:
+	  Adding some minimal test cases for the FileSystem::security().
+	  Many more should be added.
+
+2007-03-21 22:55  kpharris
+
+	* test/unit/newtest.sh: Using namespace svn instead of cvs .
+
+2007-03-21 22:55  kpharris
+
+	* test/unit/GenericTestCases.cpp.tmpl: Using namespace blocxx
+	  instead of OpenWBEM.
+
+2007-03-21 22:54  kpharris
+
+	* test/CppUnit/TestCase.hpp: Adding assertion macros to test for
+	  specific exceptions.
+
+2007-03-21 16:10  nuffer
+
+	* test/unit/UnnamedPipeTestCases.cpp,
+	  test/unit/UnnamedPipeTestCases.hpp: Add a test to
+	  UnnamedPipeTestCases that passes a descriptor between two
+	  processes. The commented while loop exposes a Mac OS X kernel
+	  bug.
+
+2007-03-21 16:07  nuffer
+
+	* src/blocxx/RWLocker.cpp: Remove unnecessary include.
+
+2007-03-21 05:04  kpharris
+
+	* src/blocxx/Exec.hpp: Removing a version of
+	  executeProcessAndGatherOutput that conflicts with another version
+	  (when doing template expansion). There are other versions that
+	  can be used to do something identical.
+
+2007-03-21 05:02  kpharris
+
+	* configure.in: Adding an --enable-64-bit-build option (will
+	  currently only have an effect on HP-UX). Adding some random fixes
+	  for HP-UX on ia64. Generating the replacement script when
+	  executing the configure script.
+
+2007-03-21 05:00  kpharris
+
+	* Makefile-replacement.inc, Makefile.am, acinclude.m4: Adding the
+	  replacement script fixes from OW.
+
+2007-03-20 22:18  kpharris
+
+	* src/blocxx/Condition.cpp: Turning on the pthread_cond_wait EINVAL
+	  test (for too large of a wait) for all platforms. For platforms
+	  that don't blow up on large values, this will result in an extra
+	  test of the return value.
+
+2007-03-20 16:51  nuffer
+
+	* src/blocxx/DescriptorUtils_noexcept.cpp: Remove some preprocessor
+	  statements I didnt want to commit.
+
+2007-03-19 23:50  nuffer
+
+	* test/unit/AtomicOpsTestCases.cpp: This unit test was taking too
+	  long, so the iterations have been reduced unless OWLONGTEST env
+	  var is set.
+
+2007-03-19 23:49  nuffer
+
+	* src/blocxx/ExceptionIds.hpp, src/blocxx/GenericRWLockImpl.cpp,
+	  src/blocxx/GenericRWLockImpl.hpp, src/blocxx/Makefile.am,
+	  src/blocxx/RWLocker.cpp, src/blocxx/RWLocker.hpp: Refactor
+	  RWLocker into GenericRWLockImpl that can be used as a basis for
+	  non-thread-id based read/write lock implementations.
+
+2007-03-19 23:45  nuffer
+
+	* src/blocxx/DescriptorUtils_noexcept.cpp: Initialize dummy so to
+	  help track down the bug on OS X.
+
+2007-03-16 01:59  kpharris
+
+	* src/blocxx/AtomicOps.hpp: Sticking an @author tag. Changing a
+	  comment to show that itanium support only needs to be added for
+	  gcc.
+
+2007-03-16 01:54  kpharris
+
+	* test/unit/AtomicOpsTestCases.cpp,
+	  test/unit/AtomicOpsTestCases.hpp: Sticking an @author tag in
+	  these. I always forget to do that...
+
+2007-03-16 00:25  kpharris
+
+	* test/unit/AtomicOpsTestCases.cpp,
+	  test/unit/AtomicOpsTestCases.hpp, test/unit/Makefile.am,
+	  test/unit/UnitMain.cpp: Adding test cases for the atomic
+	  operations.
+
+2007-03-16 00:23  kpharris
+
+	* src/blocxx/Types.hpp: Fixes for HP-UX on ia64.
+
+2007-03-16 00:23  kpharris
+
+	* src/blocxx/AtomicOps.hpp, src/blocxx/MemoryBarrier.hpp: Fixes for
+	  HP-UX on ia64.
+
+2007-03-16 00:11  kpharris
+
+	* configure.in: Fixes for HPUX on itanium.
+
+2007-03-16 00:10  kpharris
+
+	* src/blocxx/LogConfig.cpp, src/blocxx/LogConfig.hpp: Changing
+	  "char const[]" into a "const char* const" to make new versions of
+	  aCC happy.
+
+2007-02-23 22:49  nuffer
+
+	* src/blocxx/String.hpp: Clarify the documentation regarding
+	  terminating null for String(const char* str, size_t len)
+
+2007-02-23 22:48  nuffer
+
+	* src/blocxx/UTF8Utils.cpp: On empty input to UCS2ToString, avoid
+	  dereferencing the Array.
+
+2007-02-21 23:25  nuffer
+
+	* acinclude.m4: Modified to use printf instead of echo because echo
+	  can't portably be used with escape sequences, and when the shell
+	  is dash (e.g. on Ubuntu 6.10), the BLOCXX_config.h ends up with
+	  ^A characters in it.
+
+2007-02-21 00:28  kpharris
+
+	* src/blocxx/SocketBaseImpl.cpp: Adding connect() logging.
+
+2007-02-15 19:22  nuffer
+
+	* src/blocxx/Process.cpp, src/blocxx/Process.hpp: Make repr()
+	  const. Fix some indentation.
+
+2007-02-15 19:21  nuffer
+
+	* test/unit/LazyGlobalTestCases.cpp: Change a few ifs to asserts in
+	  the test because they should all work.
+
+2007-02-15 19:15  nuffer
+
+	* src/blocxx/DescriptorUtils_noexcept.cpp: zero out control_un to
+	  avoid valgrind complaints about uninitialized memory.
+
+2007-02-13 18:29  nuffer
+
+	* src/blocxx/Exec.cpp, src/blocxx/Process.cpp,
+	  src/blocxx/WaitpidThreadFix.cpp, src/blocxx/WaitpidThreadFix.hpp:
+	  Clean up WaitpidThreadFix a bit.
+
+2007-01-26 21:48  nuffer
+
+	* test/unit/run_make_check.sh: Add the test directory to the
+	  library path so the LazyGlobal test can load the test library.
+
+2007-01-26 21:47  nuffer
+
+	* src/blocxx/LazyGlobal.hpp: Add some more clarity about what a
+	  LazyGlobal factory should not do.
+
+2007-01-26 01:22  mdbess
+
+	* src/blocxx/SecureRand.cpp: Adding another path for SSL to look
+	  for EGD sockets.
+	  Checking if a binary is secure before running it to gather
+	  entropy.
+
+2007-01-19 19:25  nuffer
+
+	* src/blocxx/PathSecurity.cpp: Add AIX to the list of OSes with a
+	  user of bin with uid=2 that is considered secure.
+
+2007-01-19 00:18  nuffer
+
+	* src/blocxx/Exec.cpp: Fix some problems in processInputOutput().
+	  If a timeout happened, some data may be lost if the process
+	  output data and terminated after selectRW() timedout. Writes
+	  after a process terminated were not correctly detected.
+
+2007-01-19 00:15  nuffer
+
+	* src/blocxx/TimeoutTimer.cpp, src/blocxx/TimeoutTimer.hpp: Add
+	  asRelativeTimeout()
+
+2007-01-16 15:54  mtomaschewski
+
+	* examples/Makefile.am: - Added missed sharedLibs directory
+
+2007-01-05 01:09  nuffer
+
+	* src/blocxx/BinarySerialization.cpp,
+	  src/blocxx/BinarySerialization.hpp: Revert revision 105 which
+	  removed BinarySerialization and broke serialization compatibility
+	  with previous versions of String objects.
+
+2007-01-05 01:07  nuffer
+
+	* src/blocxx/Bool.cpp, src/blocxx/Char16.cpp,
+	  src/blocxx/Makefile.am, src/blocxx/String.cpp: Revert revision
+	  105 which removed BinarySerialization and broke serialization
+	  compatibility with previous versions of String objects.
+
+2007-01-05 00:51  nuffer
+
+	* acconfig.h: Change the name of the blocxx parameter as it seems
+	  to be causing the macro to not expand on OS X.
+
+2006-12-20 21:01  nuffer
+
+	* src/blocxx/SortedVectorMap.hpp, src/blocxx/SortedVectorSet.hpp:
+	  Modify SortedVectorSet and SortedVectorMap erase to return an
+	  iterator so that erase can be used efficiently.
+
+2006-12-15 13:40  nuffer
+
+	* bootstrap.sh: Remove checking for bison because there are no
+	  parsers in blocxx.
+
+2006-12-14 18:47  nuffer
+
+	* src/blocxx/Thread.cpp, src/blocxx/ThreadPool.cpp: Using a logger
+	  to log exceptions caught in the Thread runner or the ThreadPool.
+
+2006-12-14 18:43  nuffer
+
+	* src/blocxx/FileAppender.hpp: Using a logger to log exceptions
+	  caught in the Thread runner or the ThreadPool.
+
+2006-11-23 01:55  nuffer
+
+	* src/blocxx/LogMessagePatternFormatter.cpp,
+	  test/unit/LoggerTestCases.cpp: Fix bug in previous patch that
+	  incorrectly changed CDATA_EMBEDDED_END.
+
+2006-11-23 01:01  nuffer
+
+	* src/blocxx/GlobalStringArray.hpp: Change the type of some global
+	  object to be a LazyGlobal<> in order to avoid order of
+	  initialization problems.
+
+2006-11-23 00:55  nuffer
+
+	* configure.in, examples/Makefile.am, src/blocxx/CerrAppender.cpp,
+	  src/blocxx/CerrAppender.hpp, src/blocxx/FileAppender.cpp,
+	  src/blocxx/FileAppender.hpp, src/blocxx/LazyGlobal.hpp,
+	  src/blocxx/LogAppender.cpp, src/blocxx/LogAppender.hpp,
+	  src/blocxx/LogMessagePatternFormatter.cpp,
+	  src/blocxx/LogMessagePatternFormatter.hpp, src/blocxx/Logger.cpp,
+	  src/blocxx/Logger.hpp, src/blocxx/Makefile.am,
+	  src/blocxx/NullAppender.cpp, src/blocxx/NullAppender.hpp,
+	  src/blocxx/PosixFileSystem.cpp, src/blocxx/RandomNumber.cpp,
+	  src/blocxx/SSLCtxMgr.cpp, src/blocxx/SecureRand.cpp,
+	  src/blocxx/SharedLibraryLoader.cpp, src/blocxx/Socket.cpp,
+	  src/blocxx/Socket.hpp, src/blocxx/SocketBaseImpl.cpp,
+	  src/blocxx/SyslogAppender.cpp, src/blocxx/SyslogAppender.hpp,
+	  src/blocxx/Thread.cpp, src/blocxx/UserUtils.cpp,
+	  src/blocxx/dlSharedLibrary.cpp,
+	  src/blocxx/dlSharedLibraryLoader.cpp: Change the type of some
+	  global object to be a LazyGlobal<> in order to avoid order of
+	  initialization problems.
+
+2006-11-14 12:06  mtomaschewski
+
+	* configure.in: - Updated email address to
+	  blocxx-devel@lists.sourceforge.net,
+	  increased version to 1.9.1 to mark move to sourceforge.net.
+
+2006-11-14 00:31  bartw
+
+	* acconfig.h: make sure debug and non-debug code does not get mixed
+	  up
+
+2006-11-14 00:28  bartw
+
+	* configure.in: switched AC_LANG to C++ for iconv test, because C
+	  only emits a warning on different constness.
+
+2006-11-13 23:17  kpharris
+
+	* configure.in: Re-adding a define that shouldn't have been
+	  removed.
+
+2006-11-10 06:40  kpharris
+
+	* Makefile.am, blocxx.pc.in, configure.in: Modifying the blocxx.pc
+	  file so it can be more easily used on platforms which do not have
+	  pkg-config. By allowing the replacement script to do the
+	  substition, a simple grep/sed can be used to snag the cflags and
+	  libs.
+
+2006-11-10 06:39  kpharris
+
+	* src/blocxx/.cvsignore: Ignoring more files...
+
+2006-11-10 06:37  kpharris
+
+	* Makefile-replacement.inc: Ignoring some of the entries that would
+	  normally be substituted yet cannot be determined at the top level
+	  source directory (like @srcdir@). These values were being
+	  replaced by nothing, which is not what most people would expect.
+
+2006-11-10 06:36  kpharris
+
+	* acinclude.m4: Adding some of my autoconf macros from OpenWBEM
+	  that can be used to simplify some --enable operations.
+
+2006-11-10 06:35  kpharris
+
+	* configure.in, examples/iconv/Makefile.am, src/blocxx/IConv.cpp,
+	  src/blocxx/IConv.hpp: Allowing iconv to be disabled...
+
+2006-11-10 06:32  kpharris
+
+	* examples/intrusiveRef/.cvsignore: Fixing an ignored executable
+	  name. Not that it matters much for subversion...
+
+2006-11-08 22:47  bartw
+
+	* acconfig.h, configure.in: Add a check to make sure we do not mix
+	  debug and non-debug c++ code
+
+2006-11-08 22:42  jcarey
+
+	* README: Testing svn access
+
+2006-11-08 06:54  kpharris
+
+	* configure.in: Autodetecting the use of -liconv when needed.
+
+2006-11-03 18:57  jcarey
+
+	* .: Adjustment from svn repository load.
+
+2006-11-01 13:01  bwhiteley
+
+	* fixed new backwards compatibility functions to match old behavior
+
+2006-11-01 12:43  nuffer
+
+	* Add ability to signal an entire process group for termination.
+
+2006-11-01 12:28  bwhiteley
+
+	* added some stuff for backward compatibility
+
+2006-10-26 23:53  nuffer
+
+	* Add logging regarding what is insecure if the file fails a
+	  security check.
+
+2006-10-23 21:22  nuffer
+
+	* Handle case where the file isnt open in buffer_from_device().
+
+2006-10-20 17:51  nuffer
+
+	* Fix some bugs. operator| has a lower precedence than operator==
+	  and close() should check that the file isOpen(). Thank to Mat
+	  Bess.
+
+2006-10-05 18:24  joelsmith
+
+	* Cleaned up and re-ordered parts of Types.hpp
+
+2006-10-04 22:49  joelsmith
+
+	* Fixes for Exec and Process test cases for build directories that
+	  contain spaces
+
+2006-10-01 02:57  bwhiteley
+
+	* Added support for the app to pass in a private key (EVP_PKEY)
+	  instead of a key file
+
+2006-09-30 18:01  bwhiteley
+
+	* added GlobalMutex.hpp to Makefile
+
+2006-09-28 23:34  nuffer
+
+	* Fix old thread lib test.
+
+2006-09-28 21:28  joelsmith
+
+	* Added GlobalMutex.cpp to the build, fixed a build error (Oops, I
+	  ran make check from src/blocxx, not from the project root dir :)
+	  )
+
+2006-09-28 21:09  joelsmith
+
+	* Added GlobalMutex (LazyGlobal'd Mutex) and switched SSL state
+	  mutexes to
+	  use GlobalMutex instead of Mutex
+
+2006-09-28 19:27  nuffer
+
+	* Fix coding style of recent commit.
+
+2006-09-28 18:56  nuffer
+
+	* Thanks to Mat Bess. Implemented a fix for older linux
+	  implementations that dont allow a thread to wait for a child
+	  process that forked from a different thread.
+
+2006-09-28 18:54  nuffer
+
+	* Throw an exception if the filename to the UDS is too long.
+
+2006-09-28 18:12  joelsmith
+
+	* Made SSL init and locks disabling flags thread-safe
+
+2006-09-28 00:15  joelsmith
+
+	* Addition to support disabling of SSL library init and/or locks
+	  before
+	  use so other locks implementations can be used. Also added code
+	  to
+	  unregister SSL locks functions before deleting the locks mutex
+	  buffer
+
+2006-09-26 17:32  mtomaschewski
+
+	* - Added GlobalString.hpp
+
+2006-09-26 16:38  bwhiteley
+
+	* changed SSL globalinitialization to use LazyGlobal so that if an
+	  app does not use blocxx SSL, they can use openssl directly
+	  without conflicts.
+
+2006-09-25 05:16  bwhiteley
+
+	* added basename() to FileSystem::Path. fixed dirname() to not
+	  crash if an empty string is passed in
+
+2006-09-20 16:31  mtomaschewski
+
+	* - Added a WARNING log level
+
+2006-09-16 00:26  bwhiteley
+
+	* renamed one of the createTempFile funcs to
+	  createAutoDeleteTempFile because the wrong one was being called
+	  in TempFileStream
+
+2006-09-15 22:41  nuffer
+
+	* Add some code to cleanup abandoned processes in the hope of
+	  preventing zombies.
+
+2006-09-15 22:03  nuffer
+
+	* Fix indentation.
+
+2006-09-15 22:01  nuffer
+
+	* Rework the implementation of Process so that no virtual functions
+	  are called from the destructor.
+
+2006-09-15 21:55  nuffer
+
+	* If --enable-debug-mode is specified, dont use the default
+	  CXXFLAGS and CFLAGS because -g -O2 is just non-sensical.
+
+2006-09-15 21:54  nuffer
+
+	* Adding GlobalString.hpp
+
+2006-09-15 21:53  nuffer
+
+	* Add a log message the the unlink call in createTempFile fails.
+
+2006-09-12 23:35  kpharris
+
+	* HAVE_SYS_STAT_H --> BLOCXX_HAVE_SYS_STAT_H. It is strange that
+	  this compiled on several platforms.
+
+2006-09-12 03:35  kpharris
+
+	* Using header tests before including some headers.
+
+2006-09-12 03:33  kpharris
+
+	* Changing the default behavior of BLOCXX_CHECK_YYY_HEADERS to
+	  include all previously listed headers when testing for one in the
+	  list. This is more like what autoconf normally does with
+	  AC_CHECK_HEADERS. There is now an independent version as well
+	  (which is faster, should dependencies between the headers not
+	  matter).
+
+2006-09-12 01:40  kpharris
+
+	* Not installing libblocxx as a fake library.
+
+2006-09-11 20:55  nuffer
+
+	* Some HP-UX fixes. Disable iconv. Dont use variable length arrays,
+	  they are non-portable.
+
+2006-09-07 23:34  nuffer
+
+	* Add the --with-search-dir include path to CPPFLAGS instead of
+	  CFLAGS and CXXFLAGS. saved_* goes with the OpenSSL test.
+
+2006-09-07 23:28  nuffer
+
+	* Fix an infinite recursion loop in strend
+
+2006-09-06 22:58  nuffer
+
+	* Fixed portability issues.
+	  - IPCMutex is broken everywhere except Linux.
+	  - REG_NOERROR is a non-portable Linuxism.
+	  - handle lack of std::wstring.
+	  - Correctly handle iconv impls that have a const char** inbuf
+	  parameter.
+	  - Link to the iconv library when necessary (always).
+
+2006-09-06 19:26  joncarey
+
+	* Testing commit mailing list
+
+2006-09-06 19:16  kpharris
+
+	* Random configure script fixes. Setting the version from the value
+	  set in AC_INIT. Replacing the '==' tests with the proper '=',
+	  altering some header tests, etc.
+
+2006-09-06 18:23  kpharris
+
+	* Modifying the CREATE_PREFIX_CONFIG_H to avoid prefixing something
+	  that was already prefixed (ie. avoid creating something like
+	  BLOCXX_BLOCXX_VERSION). Adding functions for checking C and C++
+	  headers, undefining the corresponding HAVE_XXXXX macros if they
+	  do not work.
+
+2006-09-05 20:50  joelsmith
+
+	* Cleaned up mixed line endings, some \r\n, some \n
+
+2006-09-05 20:45  nuffer
+
+	* Rename one of ExecMockObject::executeProcessAndGatherOutput to
+	  executeProcessAndGatherOutput2 to avoid virtual function hiding
+	  problems.
+
+2006-09-05 19:39  nuffer
+
+	* Change FileSystem::createTmpFile to createTempFile so that the
+	  spelling is consistent.
+
+2006-08-31 18:33  mtomaschewski
+
+	* - Added NULLValueExceptionId
+
+2006-08-31 18:15  mtomaschewski
+
+	* - Fixed svn:ignore properties
+
+2006-08-31 18:10  mtomaschewski
+
+	* - Moved doxygen blocxx.tag file generation to docs
+	  - Updated svn:ignore properties
+
+2006-08-31 18:01  mtomaschewski
+
+	* - Added NULLValueException
+
+2006-08-31 15:13  joncarey
+
+	* Removed traces of OW/ow openwbem/OpenWBEM and most CIM
+
+2006-08-31 14:53  joncarey
+
+	* Removing traces of ow
+
+2006-08-31 05:07  bwhiteley
+
+	* finally worked out the arch detection (at least for all SUSE
+	  platforms)
+
+2006-08-30 20:45  bwhiteley
+
+	* working on arch detection
+
+2006-08-30 20:28  joncarey
+
+	* Moved SafeLibCreate back over to OpenWBEM. Moved the getOWVersion
+	  function for fake libs in dlSharedLibrary over to OpenWBEM. All
+	  getOWVersion stuff gone now.
+
+2006-08-30 04:41  bwhiteley
+
+	* working on arch detection. still not working right
+
+2006-08-30 04:41  bwhiteley
+
+	* ported memory barrier to s390 and ppc
+
+2006-08-29 23:18  joncarey
+
+	* Testing email notification
+
+2006-08-29 23:02  joncarey
+
+	* Removed some references to openwbem
+
+2006-08-29 21:26  bwhiteley
+
+	* added doc dir from blocxx v1
+
+2006-08-28 19:31  bwhiteley
+
+	* merged with recent OW changes
+
+2006-08-24 15:59  bwhiteley
+
+	* fixed version
+
+2006-08-21 23:00  bwhiteley
+
+	* adding some error handling to IPCMutex
+
+2006-08-19 04:00  bwhiteley
+
+	* added -liconv for solaris
+
+2006-08-18 22:57  bwhiteley
+
+	* some changes to get solaris to compile
+
+2006-08-18 21:19  joncarey
+
+	* Testing commit mailing list
+
+2006-08-18 19:07  bwhiteley
+
+	* changed SharedLibLoader to take a version passed in as a param.
+
+2006-08-18 00:09  nuffer
+
+	* Set the library version so things will build on OS X.
+
+2006-08-17 20:55  bwhiteley
+
+	* removed binaryserialization test cases
+
+2006-08-17 02:52  bwhiteley
+
+	* merged with OW head
+
+2006-08-16 23:01  joncarey
+
+	* Removed BinarySerialization and dependencies
+
+2006-08-16 22:58  bwhiteley
+
+	* changed to use Select::selectRW abstraction
+
+2006-08-16 20:46  joncarey
+
+	* Fixed problem with temp file name. Changed TempFileStream to
+	  throw an IOException if the temp file cannot be created.
+
+2006-08-16 20:14  bwhiteley
+
+	* moved readEnum template from .cpp to header so OpenWBEM can
+	  consume it
+
+2006-08-16 18:06  joncarey
+
+	* Start out in output mode when dir is given in CTOR of stream
+	  buffer
+
+2006-08-16 17:32  bwhiteley
+
+	* fixed new poll code in socket. Still need to switch it to
+	  Select::select()
+
+2006-08-16 06:10  bwhiteley
+
+	* some fixes discovered while rigging OW to use blocxx
+
+2006-08-14 17:25  bwhiteley
+
+	* merged with ow head
+
+2006-08-14 03:02  joncarey
+
+	* Document TempFileStream.*. Renamed releaseFile to
+	  releaseFileAndReset
+
+2006-08-13 22:38  joncarey
+
+	* Combined output gatherer classes
+
+2006-08-11 23:11  joncarey
+
+	* Added executeAndGatherOutput functions that will separate STDOUT
+	  and STDERR
+
+2006-08-11 21:57  bwhiteley
+
+	* merged with recent OpenWBEM changes
+
+2006-08-11 21:05  bwhiteley
+
+	* merging
+
+2006-08-11 20:20  joncarey
+
+	* Updated to latest stat of conversion
+
+2006-08-11 19:52  joncarey
+
+	* SSL Stuff done
+
+2006-08-11 19:44  joncarey
+
+	* StaticAssert
+
+2006-08-11 19:33  joncarey
+
+	* String done
+
+2006-08-11 19:21  bwhiteley
+
+	* merging
+
+2006-08-11 19:18  joncarey
+
+	* TempFileEnumerationBase.* done
+
+2006-08-11 19:13  joncarey
+
+	* Changed to attempt to remove file if user asked for the file to
+	  be retained and didn't ever call releaseFile
+
+2006-08-11 17:57  joncarey
+
+	* Added TempFileStream
+
+2006-08-11 17:52  joncarey
+
+	* Added the capability for caller to retain the underlying file
+	  used in the stream opertions. If file is being kept, the user
+	  must call releaseFile to get the name. If user specifies the file
+	  will be kept, these classes will never delete the underlying
+	  file.
+
+2006-08-11 16:05  joncarey
+
+	* ThreadCounter moved
+
+2006-08-11 16:01  joncarey
+
+	* Updated to reflect what is done
+
+2006-08-11 15:44  joncarey
+
+	* Added TmpFile functionality to FileSystem and removed TmpFile.*.
+	  Made necessary adjustments
+
+2006-08-11 15:25  bwhiteley
+
+	* merging
+
+2006-08-10 17:30  mtomaschewski
+
+	* - merged lock-type arguments File.hpp PosixFile.cpp from blocxx
+	  cvs.
+
+2006-08-10 16:58  mtomaschewski
+
+	* - Fixed some comments and openwbem/blocxx prefixes
+
+2006-08-10 16:57  mtomaschewski
+
+	* ...
+
+2006-08-10 16:21  joncarey
+
+	* Done: BinarySerialization
+
+2006-08-10 16:13  bwhiteley
+
+	* more merging
+
+2006-08-10 16:08  mtomaschewski
+
+	* ....
+
+2006-08-10 15:36  mtomaschewski
+
+	* - Merged EnvVars with blocxx cvs
+
+2006-08-10 12:55  mtomaschewski
+
+	* - Fixed svn:ignore properties
+
+2006-08-10 12:51  mtomaschewski
+
+	* - Added result binaries to svn:ignore properties
+
+2006-08-10 12:41  mtomaschewski
+
+	* - Added Makefile(.in), .deps to svn:ignore properties
+
+2006-08-10 12:35  mtomaschewski
+
+	* - Added CryptographicRandomNumber.*
+
+2006-08-10 12:33  mtomaschewski
+
+	* - Fixed indenting and doxygen documentation.
+
+2006-08-10 12:20  mtomaschewski
+
+	* - Fixed indenting and missed params in doxygen documentation.
+
+2006-08-10 12:17  mtomaschewski
+
+	* - Fixed indenting and missed params in doxygen documentation.
+
+2006-08-10 12:12  mtomaschewski
+
+	* - Prepended BLOCXX_NAMESPACE to ExceptionDetail in
+	  BLOCXX_THROW_ERRNO
+	  and BLOCXX_THROW_ERRNO_MSG macros to make them useable outside of
+	  the blocxx namespace as well.
+	  - Fixes to the doxygen documentation (undocumented params,
+	  quoting).
+
+2006-08-10 00:28  bwhiteley
+
+	* ...
+
+2006-08-10 00:26  joncarey
+
+	* Added addLogAppender and getLevel to AppenderLogger with required
+	  adjustments
+
+2006-08-09 23:46  joncarey
+
+	* Added another ctor to allow just the default component and
+	  loglevel to be passed in
+
+2006-08-09 23:30  joncarey
+
+	* converted over to new blocxx
+
+2006-08-09 23:09  bwhiteley
+
+	* ...
+
+2006-08-09 22:47  mtomaschewski
+
+	* ..
+
+2006-08-09 22:40  joncarey
+
+	* Added macros for the stream operator versions of BLOCXX_SLOG and
+	  errno preservation
+
+2006-08-09 22:36  mtomaschewski
+
+	* ...
+
+2006-08-09 22:34  joncarey
+
+	* Adjusted to new SharedLibraryLoader interface
+
+2006-08-09 22:32  mtomaschewski
+
+	* - StrictWeakOrdering
+	  - moved AppenderLogger to done again
+
+2006-08-09 22:25  bwhiteley
+
+	* ...
+
+2006-08-09 22:00  mtomaschewski
+
+	* - Win32SocketBaseImpl.cpp
+
+2006-08-09 21:51  bwhiteley
+
+	* ...
+
+2006-08-09 21:46  bwhiteley
+
+	* merged some more files
+
+2006-08-09 21:45  bwhiteley
+
+	* added examples
+
+2006-08-09 21:38  mtomaschewski
+
+	* - Array*
+
+2006-08-09 21:38  mtomaschewski
+
+	* - Added documentation and find/contains methods from blocxx cvs
+
+2006-08-09 21:23  mtomaschewski
+
+	* - AppenderLogger.?pp
+
+2006-08-09 21:13  mtomaschewski
+
+	* - Added documentation
+
+2006-08-09 20:32  joncarey
+
+	* Removed usage of ConfigFile/ConfigOpt. Switched over to LogConfig
+
+2006-08-09 20:30  joncarey
+
+	* Removed ConfigFile/ConfigOpt include. Changed log test over to
+	  LogConfig usage.
+
+2006-08-09 19:01  bwhiteley
+
+	* ...
+
+2006-08-09 18:29  mtomaschewski
+
+	* - StringStream.?pp
+
+2006-08-09 18:26  mtomaschewski
+
+	* - More *Exception.?pp
+
+2006-08-09 18:18  mtomaschewski
+
+	* - Merged SyslogAppender identity and facility parameters
+
+2006-08-09 18:15  mtomaschewski
+
+	* - Merged in syslog identity and facility
+
+2006-08-09 18:01  bwhiteley
+
+	* fixed filename in comment
+
+2006-08-09 17:40  mtomaschewski
+
+	* - ...
+
+2006-08-09 17:22  mtomaschewski
+
+	* - ...
+
+2006-08-09 17:05  mtomaschewski
+
+	* - Added note to UUID.cpp, because of a bug in libuuid (e2fsprogs)
+
+2006-08-09 16:57  mtomaschewski
+
+	* - Added ThreadOnce impl
+
+2006-08-09 16:42  bwhiteley
+
+	* added some tests from blocxx-1.0
+
+2006-08-09 16:34  mtomaschewski
+
+	* - Added some files to it
+
+2006-08-09 16:30  mtomaschewski
+
+	* - Added UserUtils.*
+
+2006-08-09 16:26  bwhiteley
+
+	* fixed copyright
+
+2006-08-09 16:22  mtomaschewski
+
+	* - Updated copyrights in outputHeader().
+
+2006-08-09 16:17  mtomaschewski
+
+	* - Updated copyright years
+
+2006-08-09 16:09  mtomaschewski
+
+	* - Adopted utf8CodeGenerators/*
+
+2006-08-09 15:47  mtomaschewski
+
+	* - Added UTF8Utils.cpp
+
+2006-08-09 15:47  mtomaschewski
+
+	* - Fixed BLOCXX_ prefix in UTF8Utils namespace
+
+2006-08-09 15:36  mtomaschewski
+
+	* - added NULLValueException.*
+
+2006-08-09 15:36  mtomaschewski
+
+	* - Added NULLValueException files
+
+2006-08-09 15:07  mtomaschewski
+
+	* - Added list of already merged files
+
+2006-08-09 15:06  mtomaschewski
+
+	* - Merged with blocxx cvs
+
+2006-08-09 14:34  mtomaschewski
+
+	* - Updated svn:ignore properties
+
+2006-08-09 14:30  mtomaschewski
+
+	* - Added blocxx.pc file variables and doxygen checks.
+	  - Added prereserving of used defined CFLAGS, CXXFLAGS, ...
+	  variables
+	  - Changed to use BX_PREFIX_CONFIG_H instead
+	  AC_CREATE_PREFIX_CONFIG_H
+
+2006-08-09 14:27  mtomaschewski
+
+	* - Added blocxx.pc installation
+	  - Changed to use $(DOXYGEN) macro
+	  - Added Doxyfile _configs.sed to DISTCLEANFILES
+
+2006-08-09 14:25  mtomaschewski
+
+	* - Renamed Doxyfile.sh to Doxyfile.in so it can be processed
+	  by config.status and include DOT utility dependency
+
+2006-08-09 14:19  mtomaschewski
+
+	* - Added RegEx.hpp header file
+
+2006-08-09 14:17  mtomaschewski
+
+	* - Added libblocxx.a and .so files to ignore property
+
+2006-08-09 14:15  mtomaschewski
+
+	* - Added RegEx, IConv and IPCMutex classes to build rules
+
+2006-08-09 14:14  mtomaschewski
+
+	* - Fixed to include BLOCXX_config.h before check for
+	  BLOCXX_HAVE_SYS_IPC_H, ... avaliability
+
+2006-08-09 13:57  mtomaschewski
+
+	* - Added BX_PREFIX_CONFIG_H (modified AX_PREFIX_CONFIG_H)
+	  creating the prefixed BLOCXX_config.h via config.status
+
+2006-08-09 13:55  mtomaschewski
+
+	* - Copied from blocxx cvs
+
+2006-08-09 13:49  mtomaschewski
+
+	* - Added .deps and BLOCXX_config.h to svn:ignore properties
+
+2006-08-09 13:46  mtomaschewski
+
+	* - Copied from BloCxx cvs
+
+2006-08-09 09:27  mtomaschewski
+
+	* - Merged in from blocxx cvs
+
+2006-08-09 01:12  bwhiteley
+
+	* fixed copyrights
+
+2006-08-08 23:44  bwhiteley
+
+	* renamed namespaces, macro prefixes, etc.
+
+2006-08-08 23:44  bwhiteley
+
+	* removed
+
+2006-08-08 23:41  bwhiteley
+
+	* added tests
+
+2006-08-08 21:25  joncarey
+
+	* changed configure.in acconfig.h and others to use BLOCXX_ instead
+	  of OW_
+
+2006-08-08 19:52  joncarey
+
+	* Imported blocxx code. WIP
+
+2006-08-08 19:44  joncarey
+
+	* created branches tags trunk
+
+2006-02-10 03:11  mtomaschewski
+
+	* src/blocxx/String.cpp:
+
+	Fixed variable type in indexOf to size_t
+
+2006-02-10 01:23  bwhiteley
+
+	* src/blocxx/IConv.cpp:
+
+	new fix for OSX
+
+2006-02-10 01:22  mtomaschewski
+
+	* Makefile.am:
+
+	Added _configs.sed to DISTCLEANFILES
+
+2006-02-10 01:19  mtomaschewski
+
+	* examples/intrusiveRef/Makefile.am:
+
+	Fixed to mach -o name and Makefile.am names
+
+2006-02-10 01:13  mtomaschewski
+
+	* acinclude.m4:
+
+	Fixed to use mv -f -- needed by distcheck
+
+2006-02-10 01:11  bwhiteley
+
+	* src/blocxx/MutexImpl.cpp:
+
+	moved pthread_mutexattr_destroy to right place
+
+2006-02-10 00:31  mtomaschewski
+
+	* src/blocxx/NonRecursiveMutexImpl.cpp:
+
+	Fixed indenting
+
+2006-02-09 21:15  bwhiteley
+
+	* src/blocxx/IConv.cpp:
+
+	try again to fix for all plats
+
+2006-02-09 20:44  mtomaschewski
+
+	* src/blocxx/PosixRegEx.cpp:
+
+	Fixed REG_NOERROR check again
+
+2006-02-09 20:42  mtomaschewski
+
+	* src/blocxx/PosixRegEx.cpp:
+
+	Changed to detect it
+
+2006-02-09 20:36  bwhiteley
+
+	* src/blocxx/: IConv.cpp, IConv.hpp:
+
+	reverted changes, previous change broke linux build
+
+2006-02-09 20:34  mtomaschewski
+
+	* examples/threads/Makefile.am:
+
+	Added demoThread to EXTRA_DIST
+
+2006-02-09 20:29  bwhiteley
+
+	* configure.in, src/blocxx/IConv.cpp, src/blocxx/IConv.hpp,
+	src/blocxx/Makefile.am, src/blocxx/PosixRegEx.cpp:
+
+	some fixes to make it compile on OSX
+
+2006-02-09 20:29  mtomaschewski
+
+	* examples/sharedLibs/Makefile.am:
+
+	Fixed EXTRA_DIST file list
+
+2006-02-09 19:58  bwhiteley
+
+	* src/blocxx/: EnvVars.cpp, Environ.hpp, Makefile.am:
+
+	added Environ.hpp
+
+2006-02-09 18:53  bwhiteley
+
+	* src/blocxx/: MutexImpl.cpp, NonRecursiveMutexImpl.cpp:
+
+	merged changes from OW -- addressing some resource leaks
+
+2006-02-09 00:57  mtomaschewski
+
+	* Makefile.am, configure.in:
+
+	Added doc subdir, so it is included in dist tgz
+
+2006-02-09 00:32  mtomaschewski
+
+	* examples/sharedLibs/Makefile.am:
+
+	Fixed to include headers in the file list
+
+2006-02-08 23:48  mtomaschewski
+
+	* src/blocxx/Makefile.am:
+
+	Fixed typo in header list
+
+2006-02-08 23:47  mtomaschewski
+
+	* src/blocxx/Makefile.am:
+
+	Fixed typo in Makefile.am
+
+2006-02-08 22:23  mtomaschewski
+
+	* configure.in:
+
+	Increased version number to 1.0.0
+
+2006-02-08 21:46  mtomaschewski
+
+	* ReleaseSteps:
+
+	Added --utc -S -P options to cvs2cl.pl example
+
+2006-02-08 21:40  mtomaschewski
+
+	* doc/blocxx_coding_guide.txt:
+
+	Cleaned up, mostly macro prefixes, etc.
+
+2006-02-08 21:39  mtomaschewski
+
+	* doc/logging.txt:
+
+	Added link to the tutorial by Matt Ryan, fixed syslog
+	identity/facility
+
+2006-02-08 21:24  mtomaschewski
+
+	* doc/BloCxx_Binary_Compatibility.html:
+
+	Cleaned up
+
+2006-02-08 19:30  mtomaschewski
+
+	* ChangeLog2.0:
+
+	Removed OW changelog file
+
+2006-02-02 21:50  bwhiteley
+
+	* src/blocxx/Types.hpp:
+
+	removed line that should not have been there
+
+2006-02-01 19:14  bwhiteley
+
+	* src/blocxx/: COWReference.hpp, COWReferenceBase.hpp:
+
+	added useRefCount to COWReference and removed a stray incRef() in
+	cast_to()
+
+2006-01-25 12:14  dsieben
+
+	* src/blocxx/COWIntrusiveCountableBase.hpp:
+
+	- Fixed a typo in the detailed description section
+
+2006-01-18 12:28  dsieben
+
+	* src/blocxx/: String.cpp, String.hpp:
+
+	- Added a string constructor for std::string
+
+2005-12-24 04:14  bwhiteley
+
+	* src/blocxx/: AppenderLogger.cpp, AppenderLogger.hpp,
+	COWIntrusiveCountableBase.hpp, COWIntrusiveReference.hpp,
+	CommonFwd.hpp, DateTime.cpp, FileSystem.hpp,
+	IntrusiveCountableBase.hpp, IntrusiveReference.hpp,
+	PosixFileSystem.cpp, SSLCtxMgr.cpp, SSLCtxMgr.hpp, Thread.hpp:
+
+	merged with latest OW changes
+
+2005-10-11 11:56  mtomaschewski
+
+	* src/blocxx/Exception.hpp:
+
+	- Fixed BLOCXX_THROW_ERRNO and BLOCXX_THROW_ERRNO_MSG macros   to
+	be usable outside of the blocxx namespace as well
+
+2005-10-10 11:34  mtomaschewski
+
+	* src/blocxx/: PerlRegEx.hpp, PosixRegEx.hpp:
+
+	- Fixed description of @return in compile() method
+
+2005-09-19 23:10  bwhiteley
+
+	* src/blocxx/: CryptographicRandomNumber.cpp, DateTime.cpp,
+	String.hpp, dyldSharedLibrary.hpp:
+
+	synced with latest OW changes
+
+2005-09-02 23:21  bwhiteley
+
+	* src/blocxx/Types.hpp, test/CppUnit/Makefile.am,
+	test/unit/Makefile.am:
+
+	sync with OW
+
+2005-08-12 22:00  bwhiteley
+
+	* src/blocxx/Select.cpp:
+
+	synced with OW
+
+2005-08-11 12:38  mtomaschewski
+
+	* src/blocxx/: PerlRegEx.cpp, PerlRegEx.hpp, PosixRegEx.cpp,
+	PosixRegEx.hpp:
+
+	- Fixed quoting of capture references in replace()
+
+2005-08-10 09:17  mtomaschewski
+
+	* src/blocxx/: LogAppender.cpp, LogAppender.hpp,
+	SyslogAppender.cpp, SyslogAppender.hpp:
+
+	- Added identity and facility parameters to SyslogAppender   that
+	are passed to the openlog function call.
+
+2005-07-22 20:32  mtomaschewski
+
+	* blocxx.m4:
+
+	- Added check for BLOCXX_WITH_LARGEFILE consistence
+
+2005-07-22 20:31  mtomaschewski
+
+	* acconfig.h:
+
+	- Make sure, that the large file support flags are set.
+
+2005-07-21 17:55  mtomaschewski
+
+	* configure.in:
+
+	- Added defining of BLOCXX_WITH_LARGEFILE if large   file support
+	was requested while configure run
+
+2005-07-21 14:16  mtomaschewski
+
+	* src/blocxx/PosixFileSystem.cpp:
+
+	- Prepended :: to stat and lstat function calls
+
+2005-07-21 14:03  mtomaschewski
+
+	* configure.in:
+
+	- added large file support (enabled by default) checks
+
+2005-07-12 10:28  mtomaschewski
+
+	* src/blocxx/: IConv.cpp, PerlRegEx.cpp, PosixRegEx.cpp:
+
+	- Prepended :: to all used C functions
+
+2005-07-12 10:27  mtomaschewski
+
+	* src/blocxx/: PerlRegEx.hpp, PosixRegEx.hpp:
+
+	- Added missed COMMON_API macros, removed Format.hpp inclusion
+
+2005-07-11 10:17  mtomaschewski
+
+	* blocxx.m4:
+
+	- Removed -R/path/to/library from BLOCXX_LDFLAGS - Added subst of
+	BLOCXX_LIB_DIR set to the lib	directory if not a default path
+
+2005-07-09 02:47  mtomaschewski
+
+	* src/blocxx/EnvVars.cpp:
+
+	- Removed useless empty-value check added to getenvp before
+
+2005-07-08 16:38  mtomaschewski
+
+	* src/blocxx/EnvVars.cpp:
+
+	- Fixed getenvp() to allocate space for terminator - Fixed to skip
+	copying of the value if it is empty
+
+2005-07-08 15:48  mtomaschewski
+
+	* examples/pcre/.cvsignore, examples/iconv/.cvsignore,
+	examples/loggers/.cvsignore, examples/regex/.cvsignore,
+	examples/sample1/.cvsignore, examples/utils/.cvsignore, .cvsignore,
+	examples/.cvsignore, examples/cmdLineParser/.cvsignore,
+	examples/collections/.cvsignore, examples/intrusiveRef/.cvsignore,
+	examples/sharedLibs/.cvsignore, examples/threads/.cvsignore:
+
+	- Updated .cvsignore files
+
+2005-07-08 15:32  mtomaschewski
+
+	* Makefile.am, blocxx.pc.in, configure.in:
+
+	- Added generation and installation of a pkg-config blocxx.pc file
+
+2005-07-08 11:12  mtomaschewski
+
+	* src/blocxx/PerlRegEx.cpp:
+
+	- Fixed to use BLOCXX_HAVE_PCRE and not BLOCXX_HAVE_REGEX
+
+2005-07-08 10:19  mtomaschewski
+
+	* src/blocxx/: EnvVars.cpp, EnvVars.hpp:
+
+	- Changed getKeyValue() to allow empty variable values - Changed
+	setVar() to return false in case the variable	name is empty or
+	contains a '=' character (SUSv3) - Implemented a template
+	constructor allowing to pass   map iterators with additional
+	variables and begin()	and end() methods allowing to fetch the
+	variables
+
+2005-07-08 09:49  mtomaschewski
+
+	* src/blocxx/: File.hpp, PosixFile.cpp:
+
+	- Implemented read (shared) additionally to the write (exclusive)
+	file lock in getLock() and tryLock(). Default is a write lock.
+	Added a ELockType enum flags allowing to choose the lock type.
+
+2005-07-07 17:35  mtomaschewski
+
+	* src/blocxx/: Exec.cpp, Exec.hpp:
+
+	- Fixed safePopen, safeSystem, executeProcessAndGatherOutput
+	using EnvVars to support execution with empty environment.  - Added
+	new executeProcessAndGatherOutput function variant   gathering
+	stderr output into a separate variable.
+
+2005-07-07 17:32  mtomaschewski
+
+	* src/blocxx/: EnvVars.cpp, EnvVars.hpp:
+
+	- changed getenvp() method to return empty envp instead   of NULL
+	in case the object's map contains no variables
+
+2005-06-21 17:26  mtomaschewski
+
+	* src/blocxx/: PerlRegEx.cpp, PosixRegEx.cpp:
+
+	- Added explicit casts to avoid compiler warnings
+
+2005-06-21 16:27  mtomaschewski
+
+	* src/blocxx/PerlRegEx.cpp:
+
+	- Fixed cut&paste typo in match() causing exception on no match
+
+2005-06-21 16:10  mtomaschewski
+
+	* src/blocxx/PerlRegEx.cpp:
+
+	- Fixed index check in match() method
+
+2005-06-21 16:08  mtomaschewski
+
+	* examples/: pcre/capture.cpp, pcre/execute.cpp, pcre/grep.cpp,
+	pcre/match.cpp, pcre/replace.cpp, pcre/split.cpp,
+	regex/capture.cpp, regex/execute.cpp, regex/grep.cpp,
+	regex/match.cpp, regex/replace.cpp, regex/split.cpp:
+
+	- Fixed typo
+
+2005-06-21 12:49  mtomaschewski
+
+	* configure.in:
+
+	- Added warning if pcre-config/pkg-config are not able to find pcre
+
+2005-06-21 12:43  mtomaschewski
+
+	* examples/pcre/execute.cpp:
+
+	- Changed to use a pattern with optional matches; added the
+	MatchArray variant as well (default is native MatchVector)
+
+2005-06-21 12:42  mtomaschewski
+
+	* examples/pcre/capture.cpp:
+
+	- Changed to use a pattern with optional matches
+
+2005-06-21 12:40  mtomaschewski
+
+	* examples/regex/replace.cpp:
+
+	- Adopted to new replace method, simplified regex
+
+2005-06-21 12:38  mtomaschewski
+
+	* examples/pcre/: grep.cpp, match.cpp, replace.cpp, split.cpp:
+
+	- Ported examples to perl regex
+
+2005-06-21 12:36  mtomaschewski
+
+	* src/blocxx/PerlRegEx.cpp:
+
+	- Fixed split to use match count detection (count=0) in execute
+
+2005-06-21 12:27  mtomaschewski
+
+	* src/blocxx/PerlRegEx.cpp:
+
+	- Fixed to double the pcre result as well in native execute()
+
+2005-06-21 11:55  mtomaschewski
+
+	* examples/regex/: capture.cpp, execute.cpp:
+
+	- Changed to use a pattern using optional matches
+
+2005-06-21 11:54  mtomaschewski
+
+	* src/blocxx/: PerlRegEx.cpp, PerlRegEx.hpp:
+
+	- Changed behavior (!!!) / improved the replace() method to be able
+	to   substitute \\1 .. \\9 substring match references in the 'rep'
+	string.    Changed the first flag to global (inverted) to act as
+	s///g in perl.	- Improved execute method() to query pcre for the
+	number if counts = 0   and (count>0) to return as much offset pairs
+	as requested by the user.
+
+2005-06-21 11:50  mtomaschewski
+
+	* src/blocxx/: PosixRegEx.cpp, PosixRegEx.hpp:
+
+	- Changed behavior (!!!) / improved the replace() method to be able
+	to   substitute \\1 .. \\9 substring match references in the 'rep'
+	string.    Changed the first flag to global (inverted) to act as
+	s///g in perl.
+
+2005-06-21 00:25  mtomaschewski
+
+	* src/blocxx/: PerlRegEx.cpp, PerlRegEx.hpp, PosixRegEx.cpp,
+	PosixRegEx.hpp:
+
+	- Fixed handling of unused subpatterns in execute and capture
+
+2005-06-20 18:11  mtomaschewski
+
+	* configure.in:
+
+	- Improved regex library detection - Added pcre library detection
+	and examples directory
+
+2005-06-20 18:10  mtomaschewski
+
+	* src/blocxx/Makefile.am:
+
+	- Added PerlRegEx and RegExException files
+
+2005-06-20 18:09  mtomaschewski
+
+	* examples/: Makefile.am, pcre/Makefile.am, pcre/capture.cpp,
+	pcre/execute.cpp, pcre/grep.cpp, pcre/match.cpp, pcre/replace.cpp,
+	pcre/split.cpp:
+
+	- Added pcre regex examples
+
+2005-06-20 18:08  mtomaschewski
+
+	* examples/regex/: capture.cpp, execute.cpp, grep.cpp, match.cpp,
+	replace.cpp, split.cpp:
+
+	- Adopted to use new PosixRegEx class name
+
+2005-06-20 18:05  mtomaschewski
+
+	* src/blocxx/: PosixRegEx.cpp, PosixRegEx.hpp, RegEx.cpp,
+	RegEx.hpp:
+
+	- Renamed RegEx class and files to PosixRegEx - RegEx.hpp contains
+	a typedef aliasing PosixRegEx	to RegEx for source code
+	compatibility
+
+2005-06-20 18:02  mtomaschewski
+
+	* src/blocxx/: RegExException.cpp, RegExException.hpp:
+
+	- Moved regex compile exception into a separate file   since used
+	by perl and posix regex classes.
+
+2005-06-20 18:01  mtomaschewski
+
+	* src/blocxx/: PerlRegEx.cpp, PerlRegEx.hpp:
+
+	- Implemented a PerlRegEx (pcre wrapper) class
+
+2005-06-20 16:06  mtomaschewski
+
+	* src/blocxx/ExceptionIds.hpp:
+
+	- Added RegExExecuteExceptionId
+
+2005-06-15 15:06  mtomaschewski
+
+	* examples/regex/: capture.cpp, execute.cpp, grep.cpp, match.cpp,
+	replace.cpp, split.cpp:
+
+	- Added BLOCXX_HAVE_REGEX dependency
+
+2005-06-15 14:57  mtomaschewski
+
+	* configure.in, examples/Makefile.am, examples/regex/Makefile.am,
+	examples/regex/capture.cpp, examples/regex/execute.cpp,
+	examples/regex/grep.cpp, examples/regex/match.cpp,
+	examples/regex/replace.cpp, examples/regex/split.cpp:
+
+	- Added regex examples
+
+2005-06-15 14:56  mtomaschewski
+
+	* src/blocxx/: RegEx.cpp, RegEx.hpp:
+
+	- Added copy constructor and opeator, isCompiled(),
+	patternString(), compileFlags(), match/( methods - Improved
+	documentation, fixed TODO places
+
+2005-06-13 19:43  mtomaschewski
+
+	* configure.in:
+
+	- Don't check for additional SSL dependencies if SSL is disabled
+
+2005-06-01 15:03  bwhiteley
+
+	* src/blocxx/: Exception.hpp, FileSystem.hpp, PosixFileSystem.cpp,
+	Select.cpp:
+
+	synced with OW
+
+2005-05-20 17:50  mtomaschewski
+
+	* src/blocxx/: Array.hpp, ArrayImpl.hpp, List.hpp:
+
+	- Implemented find(element) and contains(element) methods -
+	Documented List, mostly based on Array docs
+
+2005-05-18 20:56  bwhiteley
+
+	* src/blocxx/UTF8Utils.cpp:
+
+	merged with OW
+
+2005-04-26 21:36  bwhiteley
+
+	* src/blocxx/Exec.cpp:
+
+	merged changes from OW
+
+2005-04-26 15:59  mtomaschewski
+
+	* configure.in:
+
+	- Allow user to specify additional CFLAGS, CXXFLAGS, LDFLAGS
+
+2005-04-26 15:56  mtomaschewski
+
+	* blocxx.m4:
+
+	- Added ${libdir} to blocxx lib search path   to work on platforms
+	using lib64 dirs
+
+2005-04-26 10:15  mtomaschewski
+
+	* src/blocxx/Socket.cpp:
+
+	- Added errno.h inclusion to be avaliable in THROW macros
+
+2005-04-26 09:45  mtomaschewski
+
+	* configure.in:
+
+	- Changed to use version 0.9.1 as agreed with Bart
+
+2005-04-26 09:44  mtomaschewski
+
+	* cvsbootstrap.sh:
+
+	- Changed to copy files instead
+
+2005-04-22 22:25  bwhiteley
+
+	* src/blocxx/: BinarySerialization.cpp, DateTime.cpp, DateTime.hpp,
+	EnvVars.cpp, Exec.cpp, Exec.hpp, PosixUnnamedPipe.cpp, Socket.cpp,
+	SocketAddress.cpp, Thread.hpp, ThreadCancelledException.hpp,
+	TmpFile.cpp:
+
+	merged changes from OW
+
+2005-04-18 20:11  bwhiteley
+
+	* src/blocxx/: AtomicOps.hpp, CerrAppender.cpp, CerrLogger.cpp:
+
+	merged changes from OW
+
+2005-04-14 20:37  nuffer
+
+	* src/blocxx/: Logger.cpp, Logger.hpp:
+
+	Adding ability to store/retrieve a global and thread logger.
+
+2005-04-14 20:32  bwhiteley
+
+	* src/blocxx/: CryptographicRandomNumber.cpp, Socket.hpp:
+
+	merged OW changes
+
+2005-04-14 18:26  nuffer
+
+	* examples/threads/demoRunnable.cpp, examples/threads/threads.cpp,
+	test/unit/IPCMutexTestCases.cpp:
+
+	Adding some missing includes.
+
+2005-04-12 21:58  bwhiteley
+
+	* src/blocxx/SSLCtxMgr.cpp:
+
+	fixed memory leak
+
+2005-04-11 20:46  mtomaschewski
+
+	* src/blocxx/Logger.hpp:
+
+	Added errno saving&restoring to BLOCXX_LOG macros and BLOCXX_SLOG
+	macros allowing stream operator<< in message.
+
+2005-04-11 19:41  bwhiteley
+
+	* src/blocxx/ThreadImpl.hpp:
+
+	merged changes from OW
+
+2005-04-11 19:32  mtomaschewski
+
+	* examples/iconv/iconv_test1.cpp:
+
+	Included String and Exception explicitely
+
+2005-04-11 13:10  mtomaschewski
+
+	* examples/iconv/Makefile.am:
+
+	Removed -rpath link option used while testing
+
+2005-04-09 20:43  bwhiteley
+
+	* test/unit/IPCMutexTestCases.cpp:
+
+	fix for 64bit plats
+
+2005-04-08 18:46  mtomaschewski
+
+	* src/blocxx/: IConv.cpp, IConv.hpp:
+
+	Added iconv.h configure dependency
+
+2005-04-08 18:14  mtomaschewski
+
+	* configure.in, examples/Makefile.am, src/blocxx/Makefile.am:
+
+	Added IConv wrapper
+
+2005-04-08 18:13  mtomaschewski
+
+	* examples/iconv/: Makefile.am, iconv_test1.cpp:
+
+	Added a iconv example
+
+2005-04-08 17:55  mtomaschewski
+
+	* src/blocxx/: IConv.cpp, IConv.hpp:
+
+	Implemented a IConv_t wrapper class and some utility functions in
+	IConv namespace
+
+2005-04-08 14:33  mtomaschewski
+
+	* examples/sharedLibs/Makefile.am:
+
+	Added missed INCLUDES definition
+
+2005-04-08 14:31  mtomaschewski
+
+	* examples/threads/demoRunnable.cpp:
+
+	Changed initialization order of m_bShutdown and m_localOnceFlag in
+	constructor to avoid a warning
+
+2005-04-07 22:03  npaxton
+
+	* configure.in:
+
+	add additional examples:  collections, loggers, intrusiveRef, and
+	sharedLibrary
+
+2005-04-07 21:59  npaxton
+
+	* examples/: Makefile.am, cmdLineParser/cmdLineParser.cpp,
+	collections/Makefile.am, collections/arrayDemo.cpp,
+	collections/listDemo.cpp, collections/mapDemo.cpp,
+	intrusiveRef/COWIntrusiveRefExample.cpp, intrusiveRef/Makefile.am,
+	loggers/Makefile.am, loggers/MutexedLogger.cpp,
+	loggers/MutexedLogger.hpp, loggers/loggers.cpp,
+	sharedLibs/Makefile.am, sharedLibs/SharedLibMakefile,
+	sharedLibs/derivedDummyLib.cpp, sharedLibs/derivedDummyLib.hpp,
+	sharedLibs/dummyLib.cpp, sharedLibs/dummyLib.hpp,
+	sharedLibs/readme, sharedLibs/sharedLibs.cpp,
+	threads/barrierRunnable.cpp, threads/barrierRunnable.hpp,
+	threads/conditionRunnable.cpp, threads/conditionRunnable.hpp,
+	threads/demoRunnable.cpp, threads/demoRunnable.hpp,
+	threads/demoThread.cpp, threads/demoThread.hpp,
+	threads/threads.cpp, utils/utils.cpp:
+
+	add additional examples:  collections, loggers, intrusiveRef, and
+	sharedLibrary
+
+2005-04-06 11:34  mtomaschewski
+
+	* configure.in:
+
+	Replaced AC_CREATE_PREFIX_CONFIG_H with AX_PREFIX_CONFIG_H that
+	creates the BLOCXX_config.h header in config.status.
+
+2005-04-06 11:31  mtomaschewski
+
+	* acinclude.m4:
+
+	Added newer AC_CREATE_PREFIX_CONFIG_H version named
+	AX_PREFIX_CONFIG_H that is started in config.status.  Modified it
+	to produce same results as before.
+
+2005-04-06 09:52  mtomaschewski
+
+	* configure.in:
+
+	Quoted comment checked-in last time
+
+2005-04-06 01:52  mtomaschewski
+
+	* configure.in, src/blocxx/Types.hpp:
+
+	Added Win32/MinGW platform to configure
+
+2005-04-05 23:51  bwhiteley
+
+	* src/blocxx/: SSLCtxMgr.cpp, ThreadImpl.cpp:
+
+	merged changes from OW
+
+2005-04-05 17:04  mtomaschewski
+
+	* src/blocxx/: ByteSwap.hpp, CmdLineParser.hpp, Exception.hpp,
+	Exec.hpp, FileSystem.hpp, LogAppender.hpp, Logger.hpp,
+	SSLCtxMgr.hpp, SSLSocketImpl.hpp, ServerSocket.hpp, Socket.hpp,
+	StringBuffer.hpp, ThreadImpl.hpp, UTF8Utils.hpp, UUID.hpp,
+	UnnamedPipe.hpp:
+
+	Fixed quoting of special characters and diverse obsolete or changed
+	param's in the documentation
+
+2005-04-05 16:36  mtomaschewski
+
+	* src/blocxx/RegEx.hpp:
+
+	Changed to use throws doxygen tag
+
+2005-04-05 16:35  mtomaschewski
+
+	* Doxyfile.in:
+
+	Added examples to EXAMPLE_PATH, changed INCLUDE_PATH to src,
+	changed to disable usage of dot utility if not avaliable.
+
+2005-04-05 16:33  mtomaschewski
+
+	* Makefile.am:
+
+	Changed to use DOXYGEN variable in docs target
+
+2005-04-05 16:32  mtomaschewski
+
+	* configure.in:
+
+	Added checks for doxygen and (graphviz) dot tools
+
+2005-04-05 14:31  mtomaschewski
+
+	* src/blocxx/: RegEx.cpp, RegEx.hpp:
+
+	Added throwing of RegExCompileException, improved documentation
+	inclusive examples, removed static member-function variants.
+
+2005-04-05 14:20  mtomaschewski
+
+	* src/blocxx/Makefile.am:
+
+	Added REGEX_LIB to SHAREDLIBADD
+
+2005-04-05 14:19  mtomaschewski
+
+	* configure.in:
+
+	Added detection of regex library.
+
+2005-04-05 14:18  mtomaschewski
+
+	* src/blocxx/ExceptionIds.hpp:
+
+	Added RegExCompileExceptionId.
+
+2005-04-04 18:05  mtomaschewski
+
+	* src/blocxx/: RegEx.cpp, RegEx.hpp:
+
+	Added a grep function
+
+2005-04-04 17:31  mtomaschewski
+
+	* src/blocxx/RegEx.cpp:
+
+	Fixed count passed to execute
+
+2005-04-04 16:52  mtomaschewski
+
+	* configure.in:
+
+	Added regex.h header check
+
+2005-04-04 16:50  mtomaschewski
+
+	* src/blocxx/: Makefile.am, RegEx.cpp, RegEx.hpp:
+
+	Added a simple POSIX RegEx class
+
+2005-04-01 21:09  bwhiteley
+
+	* configure.in, src/blocxx/.cvsignore, src/blocxx/Exec.cpp,
+	src/blocxx/Exec.hpp, src/blocxx/Select.cpp, src/blocxx/Select.hpp,
+	src/blocxx/SignalScope.hpp, src/blocxx/SocketUtils.cpp,
+	src/blocxx/UTF8Utils.cpp:
+
+	merged OW changes.
+
+2005-03-31 23:18  npaxton
+
+	* .cvsignore, Makefile.am, configure.in, examples/Makefile.am,
+	examples/cmdLineParser/Makefile.am,
+	examples/cmdLineParser/cmdLineParser.cpp,
+	examples/threads/Makefile.am, examples/threads/barrierRunnable.cpp,
+	examples/threads/barrierRunnable.hpp,
+	examples/threads/conditionRunnable.cpp,
+	examples/threads/conditionRunnable.hpp,
+	examples/threads/demoRunnable.cpp,
+	examples/threads/demoRunnable.hpp, examples/threads/demoThread.cpp,
+	examples/threads/demoThread.hpp, examples/threads/threads.cpp,
+	examples/utils/Makefile.am, examples/utils/utils.cpp:
+
+	Initial examples for BloCXX classes.  This includes samples for
+	CmdLineParser, Threading, and Utils.
+
+2005-03-31 21:21  joncarey
+
+	* src/blocxx/Select.cpp:
+
+	Changed poll version of select over to use AutoPtrVec for pollfd
+	array.
+
+2005-03-31 00:18  bwhiteley
+
+	* src/blocxx/Thread.cpp:
+
+	merged changes from OW
+
+2005-03-30 23:51  joncarey
+
+	* src/blocxx/: Exec.cpp, Select.cpp, Select.hpp, SocketUtils.cpp:
+
+	Bug fixes in select. Adjustments to exec and socketutils for new
+	select.
+
+2005-03-28 18:16  bwhiteley
+
+	* test/unit/ExecTestCases.cpp:
+
+	merged changes from OW
+
+2005-03-28 18:06  bwhiteley
+
+	* src/blocxx/: CryptographicRandomNumber.cpp, Exec.cpp, Exec.hpp,
+	ThreadImpl.cpp, dlSharedLibrary.cpp:
+
+	merge with OW
+
+2005-03-24 01:00  joncarey
+
+	* src/blocxx/: EnvVars.cpp, EnvVars.hpp:
+
+	Fixed problem with possible memory leak in getenvp if an exception
+	was thrown while allocating memory for the environment variables.
+
+2005-03-23 23:38  joncarey
+
+	* src/blocxx/: EnvVars.cpp, EnvVars.hpp, Makefile.am,
+	ScopeGuard.hpp:
+
+	Code clean up and enhancements
+
+2005-03-23 15:26  joncarey
+
+	* src/blocxx/EnvVars.cpp:
+
+	Removed superflous delete in deleteEnvp function.
+
+2005-03-23 00:25  joncarey
+
+	* src/blocxx/: EnvVars.cpp, EnvVars.hpp, Exec.cpp, Exec.hpp,
+	Makefile.am:
+
+	Added the EnvVars class. Changed the Exec suite of functions to
+	accept an EnvVars object.
+
+2005-03-22 10:52  mtomaschewski
+
+	* Makefile.am:
+
+	Removed Doxyfile generated by config.status from CLEANFILES
+
+2005-03-22 09:52  mtomaschewski
+
+	* .cvsignore:
+
+	Added Doxyfile to cvsignore file
+
+2005-03-22 09:52  mtomaschewski
+
+	* blocxx.m4:
+
+	Quoted CHECK_BLOCXX to avoid underquoted warnings
+
+2005-03-21 05:17  joncarey
+
+	* src/blocxx/Select.cpp:
+
+	Fixed problem with initial version of selectRW.
+
+2005-03-20 16:59  bwhiteley
+
+	* src/blocxx/: Exec.cpp, Exec.hpp:
+
+	OW changes -- should compile on OS X now
+
+2005-03-19 05:04  bwhiteley
+
+	* src/blocxx/: Exec.cpp, Exec.hpp, SignalScope.hpp:
+
+	merge OW changes
+
+2005-03-19 00:55  bwhiteley
+
+	* src/blocxx/: SocketBaseImpl.cpp, Win32SocketBaseImpl.cpp:
+
+	fixed connect to preserve hostname
+
+2005-03-18 23:11  joncarey
+
+	* src/blocxx/: Select.cpp, Select.hpp:
+
+	Coverted selectRW over to SelectObj interface. The only one that
+	remains to be converted is the Win32 version.
+
+2005-03-18 18:06  joncarey
+
+	* src/blocxx/String.cpp, src/blocxx/String.hpp,
+	test/unit/StringTestCases.cpp:
+
+	Removed deprecated stuff from string class.
+
+2005-03-18 17:23  bwhiteley
+
+	* src/blocxx/: Exec.cpp, Select.cpp, Select.hpp:
+
+	changed selectRW interface
+
+2005-03-18 16:59  joncarey
+
+	* src/blocxx/String.cpp, src/blocxx/String.hpp,
+	src/blocxx/UTF8Utils.cpp, src/blocxx/UTF8Utils.hpp,
+	src/blocxx/UTF8UtilscompareToIgnoreCase.cpp,
+	src/blocxx/utf8CodeGenerators/BLOCXX_to_UTF8.cpp,
+	src/blocxx/utf8CodeGenerators/CaseFolding.txt,
+	src/blocxx/utf8CodeGenerators/GenCaseFoldingCompare.cpp,
+	src/blocxx/utf8CodeGenerators/GenCaseFoldingCompareTests.cpp,
+	src/blocxx/utf8CodeGenerators/GenCaseMappings.cpp,
+	src/blocxx/utf8CodeGenerators/Makefile,
+	src/blocxx/utf8CodeGenerators/UnicodeData.txt,
+	test/unit/UTF8UtilsTestCases.cpp, test/unit/UTF8UtilsTestCases.hpp:
+
+	Merged UTF processing code  from OW.
+
+2005-03-18 13:23  mtomaschewski
+
+	* Doxyfile.in, Doxyfile.sh, configure.in:
+
+	Renamed Doxyfile.sh to Doxyfile.in Added Doxyfile generation in
+	configure.in
+
+2005-03-18 13:20  mtomaschewski
+
+	* Doxyfile.sh:
+
+	Removed OW files from EXCLUDE list
+
+2005-03-18 01:48  bwhiteley
+
+	* src/blocxx/: Select.cpp, ThreadOnce.cpp:
+
+	OW changes
+
+2005-03-17 19:06  bwhiteley
+
+	* src/blocxx/CryptographicRandomNumber.cpp, src/blocxx/Exec.cpp,
+	src/blocxx/Exec.hpp, test/unit/ExecTestCases.cpp:
+
+	merged OW changes
+
+2005-03-17 01:31  bwhiteley
+
+	* src/blocxx/CryptographicRandomNumber.cpp,
+	src/blocxx/DateTime.hpp, src/blocxx/Exec.cpp, src/blocxx/Exec.hpp,
+	src/blocxx/PosixUnnamedPipe.cpp, src/blocxx/PosixUnnamedPipe.hpp,
+	src/blocxx/Select.cpp, src/blocxx/Select.hpp,
+	src/blocxx/UTF8Utils.cpp, src/blocxx/UTF8Utils.hpp,
+	src/blocxx/UnnamedPipe.hpp, test/unit/ExecTestCases.cpp:
+
+	merged changes from ow
+
+2005-03-16 16:52  bwhiteley
+
+	* src/blocxx/: IPCMutex.cpp, IPCMutex.hpp, LogAppender.cpp:
+
+	added namespace into IPCMutex files
+
+2005-03-16 05:45  bwhiteley
+
+	* configure.in, src/blocxx/ExceptionIds.hpp,
+	src/blocxx/IPCMutex.cpp, src/blocxx/IPCMutex.hpp,
+	src/blocxx/Makefile.am, test/unit/GenericTestCases.cpp.tmpl,
+	test/unit/GenericTestCases.hpp.tmpl,
+	test/unit/IPCMutexTestCases.cpp, test/unit/IPCMutexTestCases.hpp,
+	test/unit/Makefile.am, test/unit/UnitMain.cpp:
+
+	added IPCMutex class
+
+2005-03-16 02:37  bwhiteley
+
+	* src/blocxx/SocketUtils.cpp:
+
+	added a check for POLLHUP
+
+2005-03-11 18:42  bwhiteley
+
+	* configure.in, src/blocxx/Select.cpp,
+	src/blocxx/SocketBaseImpl.cpp, src/blocxx/SocketUtils.cpp:
+
+	switched select to poll or epoll
+
+2005-03-09 04:51  bwhiteley
+
+	* src/blocxx/: Exec.cpp, Logger.cpp, Logger.hpp:
+
+	updated to latest OW
+
+2005-03-09 04:30  bwhiteley
+
+	* test/unit/FileSystemTestCases.cpp:
+
+	fixed for mac os
+
+2005-03-09 03:53  bwhiteley
+
+	* src/blocxx/UUID.cpp:
+
+	merged changes from OW
+
+2005-03-08 16:56  joncarey
+
+	* src/blocxx/: DLLSharedLibrary.hpp, DateTime.hpp:
+
+	Documentation
+
+2005-03-07 05:23  joncarey
+
+	* src/blocxx/: CryptographicRandomNumber.cpp,
+	CryptographicRandomNumber.hpp, DLLSharedLibrary.hpp:
+
+	Documentation
+
+2005-03-07 01:36  joncarey
+
+	* src/blocxx/: COWIntrusiveReference.hpp, COWReference.hpp:
+
+	Documentation
+
+2005-03-07 00:17  joncarey
+
+	* src/blocxx/COWIntrusiveReference.hpp:
+
+	Documentation
+
+2005-03-05 01:03  joncarey
+
+	* src/blocxx/COWIntrusiveCountableBase.hpp,
+	src/blocxx/COWIntrusiveReference.hpp, src/blocxx/CerrAppender.hpp,
+	src/blocxx/CerrLogger.hpp, src/blocxx/CmdLineParser.hpp,
+	test/unit/LoggerTestCases.cpp:
+
+	Deocumentation.
+
+2005-03-03 20:46  joncarey
+
+	* src/blocxx/: AppenderLogger.hpp, AtomicOps.hpp,
+	COWIntrusiveCountableBase.cpp, COWIntrusiveCountableBase.hpp:
+
+	Documentation
+
+2005-03-03 18:02  joncarey
+
+	* src/blocxx/: AppenderLogger.cpp, AppenderLogger.hpp,
+	CerrLogger.hpp, CommonFwd.hpp, ConfigException.cpp,
+	ConfigException.hpp, ConfigFile.cpp, ConfigFile.hpp,
+	ExceptionIds.hpp, LogAppender.cpp, LogAppender.hpp, LogConfig.hpp,
+	LogLevel.hpp, Logger.cpp, Logger.hpp, LoggerImpls.cpp, Makefile.am:
+
+	Removed ConfigFile and dependencies.  Documentation.
+
+2005-03-02 23:09  joncarey
+
+	* src/blocxx/Condition.hpp:
+
+	Documentation
+
+2005-03-02 22:28  joncarey
+
+	* src/blocxx/: Bool.hpp, ByteSwap.hpp, Char16.hpp,
+	CmdLineParser.hpp:
+
+	Documentation
+
+2005-03-02 21:18  joncarey
+
+	* src/blocxx/: AtomicOps.hpp, AutoPtr.hpp:
+
+	Documentation
+
+2005-03-02 18:31  joncarey
+
+	* src/blocxx/: Array.hpp, ArrayImpl.hpp, Assertion.hpp:
+
+	Documentation
+
+2005-03-01 19:14  bwhiteley
+
+	* .cvsignore, AUTHORS, COPYING, ChangeLog, ChangeLog2.0,
+	Doxyfile.sh, INSTALL, LICENSE, Makefile-shared-lib-inst.inc,
+	Makefile-shared-lib.inc, Makefile.am, Makefile.am.inprocessing,
+	README, ReleaseSteps, TODO, acconfig.h, acinclude.m4, blocxx.m4,
+	blocxx_ar.sh, blocxxnightly, configure.in, cvsbootstrap.sh,
+	fake_library_creator.sh, fixMakePaths.sh, gen_sizes.sh, install-sh,
+	run_tests.sh, worstdeps.sh, build/vc2003/BloCxx/.cvsignore,
+	build/vc2003/BloCxx/libblocxx.vcproj, doc/.cvsignore,
+	doc/BloCxx_Binary_Compatibility.html, doc/Makefile.am,
+	doc/PORTING.txt, doc/blocxx_coding_guide.txt, doc/logging.txt,
+	src/.cvsignore, src/Makefile.am, src/blocxx/.cvsignore,
+	src/blocxx/AppenderLogger.cpp, src/blocxx/AppenderLogger.hpp,
+	src/blocxx/Array.cpp, src/blocxx/Array.hpp,
+	src/blocxx/ArrayFwd.hpp, src/blocxx/ArrayImpl.hpp,
+	src/blocxx/Assertion.cpp, src/blocxx/Assertion.hpp,
+	src/blocxx/AtomicOps.cpp, src/blocxx/AtomicOps.hpp,
+	src/blocxx/AutoPtr.hpp, src/blocxx/BaseStreamBuffer.cpp,
+	src/blocxx/BaseStreamBuffer.hpp,
+	src/blocxx/BinarySerialization.cpp,
+	src/blocxx/BinarySerialization.hpp, src/blocxx/Bool.cpp,
+	src/blocxx/Bool.hpp, src/blocxx/ByteSwap.hpp,
+	src/blocxx/COWIntrusiveCountableBase.cpp,
+	src/blocxx/COWIntrusiveCountableBase.hpp,
+	src/blocxx/COWIntrusiveReference.cpp,
+	src/blocxx/COWIntrusiveReference.hpp, src/blocxx/COWReference.hpp,
+	src/blocxx/COWReferenceBase.cpp, src/blocxx/COWReferenceBase.hpp,
+	src/blocxx/CerrAppender.cpp, src/blocxx/CerrAppender.hpp,
+	src/blocxx/CerrLogger.cpp, src/blocxx/CerrLogger.hpp,
+	src/blocxx/Char16.cpp, src/blocxx/Char16.hpp,
+	src/blocxx/CmdLineParser.cpp, src/blocxx/CmdLineParser.hpp,
+	src/blocxx/CommonFwd.hpp, src/blocxx/Condition.cpp,
+	src/blocxx/Condition.hpp, src/blocxx/ConfigException.cpp,
+	src/blocxx/ConfigException.hpp, src/blocxx/ConfigFile.cpp,
+	src/blocxx/ConfigFile.hpp,
+	src/blocxx/CryptographicRandomNumber.cpp,
+	src/blocxx/CryptographicRandomNumber.hpp,
+	src/blocxx/DLLSharedLibrary.cpp, src/blocxx/DLLSharedLibrary.hpp,
+	src/blocxx/DLLSharedLibraryLoader.cpp,
+	src/blocxx/DLLSharedLibraryLoader.hpp, src/blocxx/DataStreams.cpp,
+	src/blocxx/DataStreams.hpp, src/blocxx/DateTime.cpp,
+	src/blocxx/DateTime.hpp, src/blocxx/Enumeration.hpp,
+	src/blocxx/EnumerationException.cpp,
+	src/blocxx/EnumerationException.hpp, src/blocxx/Exception.cpp,
+	src/blocxx/Exception.hpp, src/blocxx/ExceptionIds.hpp,
+	src/blocxx/Exec.cpp, src/blocxx/Exec.hpp, src/blocxx/File.hpp,
+	src/blocxx/FileAppender.cpp, src/blocxx/FileAppender.hpp,
+	src/blocxx/FileSystem.hpp, src/blocxx/Format.cpp,
+	src/blocxx/Format.hpp, src/blocxx/FuncNamePrinter.hpp,
+	src/blocxx/GetPass.cpp, src/blocxx/GetPass.hpp,
+	src/blocxx/HashMap.hpp, src/blocxx/HashMultiMap.hpp,
+	src/blocxx/IOException.cpp, src/blocxx/IOException.hpp,
+	src/blocxx/IOIFC.cpp, src/blocxx/IOIFC.hpp,
+	src/blocxx/IOIFCStreamBuffer.cpp, src/blocxx/IOIFCStreamBuffer.hpp,
+	src/blocxx/IntrusiveCountableBase.cpp,
+	src/blocxx/IntrusiveCountableBase.hpp,
+	src/blocxx/IntrusiveReference.hpp,
+	src/blocxx/IstreamBufIterator.hpp, src/blocxx/List.hpp,
+	src/blocxx/LogAppender.cpp, src/blocxx/LogAppender.hpp,
+	src/blocxx/LogLevel.hpp, src/blocxx/LogMessage.hpp,
+	src/blocxx/LogMessagePatternFormatter.cpp,
+	src/blocxx/LogMessagePatternFormatter.hpp, src/blocxx/Logger.cpp,
+	src/blocxx/Logger.hpp, src/blocxx/LoggerImpls.cpp,
+	src/blocxx/MD5.cpp, src/blocxx/MD5.hpp, src/blocxx/Makefile.am,
+	src/blocxx/Map.hpp, src/blocxx/MemTracer.cpp,
+	src/blocxx/MemTracer.hpp, src/blocxx/Mutex.cpp,
+	src/blocxx/Mutex.hpp, src/blocxx/MutexImpl.cpp,
+	src/blocxx/MutexImpl.hpp, src/blocxx/MutexLock.hpp,
+	src/blocxx/NULLValueException.cpp,
+	src/blocxx/NULLValueException.hpp, src/blocxx/NetworkTypes.hpp,
+	src/blocxx/NonRecursiveMutex.cpp, src/blocxx/NonRecursiveMutex.hpp,
+	src/blocxx/NonRecursiveMutexImpl.cpp,
+	src/blocxx/NonRecursiveMutexImpl.hpp,
+	src/blocxx/NonRecursiveMutexLock.hpp, src/blocxx/NullAppender.cpp,
+	src/blocxx/NullAppender.hpp, src/blocxx/NullLogger.cpp,
+	src/blocxx/NullLogger.hpp, src/blocxx/NwIface.cpp,
+	src/blocxx/NwIface.hpp, src/blocxx/OutOfBoundsException.cpp,
+	src/blocxx/PosixFile.cpp, src/blocxx/PosixFileSystem.cpp,
+	src/blocxx/PosixUnnamedPipe.cpp, src/blocxx/PosixUnnamedPipe.hpp,
+	src/blocxx/RWLocker.cpp, src/blocxx/RWLocker.hpp,
+	src/blocxx/RandomNumber.cpp, src/blocxx/RandomNumber.hpp,
+	src/blocxx/RefCount.hpp, src/blocxx/Reference.hpp,
+	src/blocxx/ReferenceBase.cpp, src/blocxx/ReferenceBase.hpp,
+	src/blocxx/Runnable.cpp, src/blocxx/Runnable.hpp,
+	src/blocxx/SSLCtxMgr.cpp, src/blocxx/SSLCtxMgr.hpp,
+	src/blocxx/SSLException.cpp, src/blocxx/SSLException.hpp,
+	src/blocxx/SSLSocketImpl.cpp, src/blocxx/SSLSocketImpl.hpp,
+	src/blocxx/Select.cpp, src/blocxx/Select.hpp,
+	src/blocxx/SelectEngine.cpp, src/blocxx/SelectEngine.hpp,
+	src/blocxx/SelectableCallbackIFC.cpp,
+	src/blocxx/SelectableCallbackIFC.hpp, src/blocxx/SelectableIFC.cpp,
+	src/blocxx/SelectableIFC.hpp, src/blocxx/Semaphore.hpp,
+	src/blocxx/ServerSocket.cpp, src/blocxx/ServerSocket.hpp,
+	src/blocxx/ServerSocketImpl.cpp, src/blocxx/ServerSocketImpl.hpp,
+	src/blocxx/SharedLibrary.cpp, src/blocxx/SharedLibrary.hpp,
+	src/blocxx/SharedLibraryException.cpp,
+	src/blocxx/SharedLibraryException.hpp,
+	src/blocxx/SharedLibraryLoader.cpp,
+	src/blocxx/SharedLibraryLoader.hpp,
+	src/blocxx/SharedLibraryReference.hpp, src/blocxx/SignalScope.hpp,
+	src/blocxx/Socket.cpp, src/blocxx/Socket.hpp,
+	src/blocxx/SocketAddress.cpp, src/blocxx/SocketAddress.hpp,
+	src/blocxx/SocketBaseImpl.cpp, src/blocxx/SocketBaseImpl.hpp,
+	src/blocxx/SocketException.hpp, src/blocxx/SocketFlags.hpp,
+	src/blocxx/SocketImpl.cpp, src/blocxx/SocketImpl.hpp,
+	src/blocxx/SocketStreamBuffer.cpp,
+	src/blocxx/SocketStreamBuffer.hpp, src/blocxx/SocketUtils.cpp,
+	src/blocxx/SocketUtils.hpp, src/blocxx/SortedVectorMap.hpp,
+	src/blocxx/SortedVectorSet.hpp, src/blocxx/Stack.hpp,
+	src/blocxx/StackTrace.cpp, src/blocxx/StackTrace.hpp,
+	src/blocxx/StrictWeakOrdering.hpp, src/blocxx/String.cpp,
+	src/blocxx/String.hpp, src/blocxx/StringBuffer.cpp,
+	src/blocxx/StringBuffer.hpp, src/blocxx/StringEnumeration.hpp,
+	src/blocxx/StringStream.cpp, src/blocxx/StringStream.hpp,
+	src/blocxx/SyslogAppender.cpp, src/blocxx/SyslogAppender.hpp,
+	src/blocxx/System.cpp, src/blocxx/System.hpp,
+	src/blocxx/TempFileEnumerationImplBase.cpp,
+	src/blocxx/TempFileEnumerationImplBase.hpp,
+	src/blocxx/TempFileStream.cpp, src/blocxx/TempFileStream.hpp,
+	src/blocxx/Thread.cpp, src/blocxx/Thread.hpp,
+	src/blocxx/ThreadBarrier.cpp, src/blocxx/ThreadBarrier.hpp,
+	src/blocxx/ThreadCancelledException.cpp,
+	src/blocxx/ThreadCancelledException.hpp,
+	src/blocxx/ThreadCounter.cpp, src/blocxx/ThreadCounter.hpp,
+	src/blocxx/ThreadDoneCallback.cpp,
+	src/blocxx/ThreadDoneCallback.hpp, src/blocxx/ThreadImpl.cpp,
+	src/blocxx/ThreadImpl.hpp, src/blocxx/ThreadOnce.cpp,
+	src/blocxx/ThreadOnce.hpp, src/blocxx/ThreadPool.cpp,
+	src/blocxx/ThreadPool.hpp, src/blocxx/ThreadTypes.hpp,
+	src/blocxx/TimeoutException.cpp, src/blocxx/TimeoutException.hpp,
+	src/blocxx/TmpFile.cpp, src/blocxx/TmpFile.hpp,
+	src/blocxx/Types.hpp, src/blocxx/UTF8Utils.cpp,
+	src/blocxx/UTF8Utils.hpp,
+	src/blocxx/UTF8UtilscompareToIgnoreCase.cpp, src/blocxx/UUID.cpp,
+	src/blocxx/UUID.hpp, src/blocxx/UnnamedPipe.cpp,
+	src/blocxx/UnnamedPipe.hpp, src/blocxx/UserUtils.cpp,
+	src/blocxx/UserUtils.hpp, src/blocxx/Win32SocketBaseImpl.cpp,
+	src/blocxx/dlSharedLibrary.cpp, src/blocxx/dlSharedLibrary.hpp,
+	src/blocxx/dlSharedLibraryLoader.cpp,
+	src/blocxx/dlSharedLibraryLoader.hpp,
+	src/blocxx/dyldSharedLibrary.cpp, src/blocxx/dyldSharedLibrary.hpp,
+	src/blocxx/dyldSharedLibraryLoader.cpp,
+	src/blocxx/dyldSharedLibraryLoader.hpp,
+	src/blocxx/shlSharedLibrary.cpp, src/blocxx/shlSharedLibrary.hpp,
+	src/blocxx/shlSharedLibraryLoader.cpp,
+	src/blocxx/shlSharedLibraryLoader.hpp, src/blocxx/vector.hpp,
+	test/.cvsignore, test/Makefile.am, test/CppUnit/.cvsignore,
+	test/CppUnit/CppUnitException.cpp,
+	test/CppUnit/CppUnitException.hpp, test/CppUnit/Guards.hpp,
+	test/CppUnit/Makefile.am, test/CppUnit/Test.hpp,
+	test/CppUnit/TestCaller.hpp, test/CppUnit/TestCase.cpp,
+	test/CppUnit/TestCase.hpp, test/CppUnit/TestFailure.cpp,
+	test/CppUnit/TestFailure.hpp, test/CppUnit/TestResult.cpp,
+	test/CppUnit/TestResult.hpp, test/CppUnit/TestRunner.cpp,
+	test/CppUnit/TestRunner.hpp, test/CppUnit/TestSuite.cpp,
+	test/CppUnit/TestSuite.hpp, test/CppUnit/TextTestResult.cpp,
+	test/CppUnit/TextTestResult.hpp, test/unit/.cvsignore,
+	test/unit/BinarySerializationTestCases.cpp,
+	test/unit/BinarySerializationTestCases.hpp,
+	test/unit/COWIntrusiveReferenceTestCases.cpp,
+	test/unit/COWIntrusiveReferenceTestCases.hpp,
+	test/unit/CmdLineParserTestCases.cpp,
+	test/unit/CmdLineParserTestCases.hpp,
+	test/unit/DateTimeTestCases.cpp, test/unit/DateTimeTestCases.hpp,
+	test/unit/EnumerationTestCases.cpp,
+	test/unit/EnumerationTestCases.hpp,
+	test/unit/ExceptionTestCases.cpp, test/unit/ExceptionTestCases.hpp,
+	test/unit/ExecTestCases.cpp, test/unit/ExecTestCases.hpp,
+	test/unit/FileSystemTestCases.cpp,
+	test/unit/FileSystemTestCases.hpp, test/unit/FormatTestCases.cpp,
+	test/unit/FormatTestCases.hpp, test/unit/GenericTestCases.cpp.tmpl,
+	test/unit/GenericTestCases.hpp.tmpl,
+	test/unit/InetAddressTestCases.cpp,
+	test/unit/InetAddressTestCases.hpp, test/unit/LoggerTestCases.cpp,
+	test/unit/LoggerTestCases.hpp, test/unit/MD5TestCases.cpp,
+	test/unit/MD5TestCases.hpp, test/unit/Makefile.am,
+	test/unit/MemTracerTest.cpp, test/unit/MemTracerTestCases.cpp,
+	test/unit/MemTracerTestCases.hpp, test/unit/MutexTestCases.cpp,
+	test/unit/MutexTestCases.hpp, test/unit/RWLockerTestCases.cpp,
+	test/unit/RWLockerTestCases.hpp,
+	test/unit/RandomNumberTestCases.cpp,
+	test/unit/RandomNumberTestCases.hpp,
+	test/unit/ReferenceTestCases.cpp, test/unit/ReferenceTestCases.hpp,
+	test/unit/SocketUtilsTestCases.cpp,
+	test/unit/SocketUtilsTestCases.hpp,
+	test/unit/StackTraceTestCases.cpp,
+	test/unit/StackTraceTestCases.hpp,
+	test/unit/StringStreamTestCases.cpp,
+	test/unit/StringStreamTestCases.hpp, test/unit/StringTestCases.cpp,
+	test/unit/StringTestCases.hpp,
+	test/unit/ThreadBarrierTestCases.cpp,
+	test/unit/ThreadBarrierTestCases.hpp,
+	test/unit/ThreadPoolTestCases.cpp,
+	test/unit/ThreadPoolTestCases.hpp, test/unit/ThreadTestCases.cpp,
+	test/unit/ThreadTestCases.hpp, test/unit/UTF8UtilsTestCases.cpp,
+	test/unit/UTF8UtilsTestCases.hpp, test/unit/UUIDTestCases.cpp,
+	test/unit/UUIDTestCases.hpp, test/unit/UnitMain.cpp,
+	test/unit/exitWithSignal.cpp, test/unit/newtest.sh,
+	test/unit/run_make_check.sh:
+
+	Initial import
+
+2005-03-01 19:14  bwhiteley
+
+	* .cvsignore, AUTHORS, COPYING, ChangeLog, ChangeLog2.0,
+	Doxyfile.sh, INSTALL, LICENSE, Makefile-shared-lib-inst.inc,
+	Makefile-shared-lib.inc, Makefile.am, Makefile.am.inprocessing,
+	README, ReleaseSteps, TODO, acconfig.h, acinclude.m4, blocxx.m4,
+	blocxx_ar.sh, blocxxnightly, configure.in, cvsbootstrap.sh,
+	fake_library_creator.sh, fixMakePaths.sh, gen_sizes.sh, install-sh,
+	run_tests.sh, worstdeps.sh, build/vc2003/BloCxx/.cvsignore,
+	build/vc2003/BloCxx/libblocxx.vcproj, doc/.cvsignore,
+	doc/BloCxx_Binary_Compatibility.html, doc/Makefile.am,
+	doc/PORTING.txt, doc/blocxx_coding_guide.txt, doc/logging.txt,
+	src/.cvsignore, src/Makefile.am, src/blocxx/.cvsignore,
+	src/blocxx/AppenderLogger.cpp, src/blocxx/AppenderLogger.hpp,
+	src/blocxx/Array.cpp, src/blocxx/Array.hpp,
+	src/blocxx/ArrayFwd.hpp, src/blocxx/ArrayImpl.hpp,
+	src/blocxx/Assertion.cpp, src/blocxx/Assertion.hpp,
+	src/blocxx/AtomicOps.cpp, src/blocxx/AtomicOps.hpp,
+	src/blocxx/AutoPtr.hpp, src/blocxx/BaseStreamBuffer.cpp,
+	src/blocxx/BaseStreamBuffer.hpp,
+	src/blocxx/BinarySerialization.cpp,
+	src/blocxx/BinarySerialization.hpp, src/blocxx/Bool.cpp,
+	src/blocxx/Bool.hpp, src/blocxx/ByteSwap.hpp,
+	src/blocxx/COWIntrusiveCountableBase.cpp,
+	src/blocxx/COWIntrusiveCountableBase.hpp,
+	src/blocxx/COWIntrusiveReference.cpp,
+	src/blocxx/COWIntrusiveReference.hpp, src/blocxx/COWReference.hpp,
+	src/blocxx/COWReferenceBase.cpp, src/blocxx/COWReferenceBase.hpp,
+	src/blocxx/CerrAppender.cpp, src/blocxx/CerrAppender.hpp,
+	src/blocxx/CerrLogger.cpp, src/blocxx/CerrLogger.hpp,
+	src/blocxx/Char16.cpp, src/blocxx/Char16.hpp,
+	src/blocxx/CmdLineParser.cpp, src/blocxx/CmdLineParser.hpp,
+	src/blocxx/CommonFwd.hpp, src/blocxx/Condition.cpp,
+	src/blocxx/Condition.hpp, src/blocxx/ConfigException.cpp,
+	src/blocxx/ConfigException.hpp, src/blocxx/ConfigFile.cpp,
+	src/blocxx/ConfigFile.hpp,
+	src/blocxx/CryptographicRandomNumber.cpp,
+	src/blocxx/CryptographicRandomNumber.hpp,
+	src/blocxx/DLLSharedLibrary.cpp, src/blocxx/DLLSharedLibrary.hpp,
+	src/blocxx/DLLSharedLibraryLoader.cpp,
+	src/blocxx/DLLSharedLibraryLoader.hpp, src/blocxx/DataStreams.cpp,
+	src/blocxx/DataStreams.hpp, src/blocxx/DateTime.cpp,
+	src/blocxx/DateTime.hpp, src/blocxx/Enumeration.hpp,
+	src/blocxx/EnumerationException.cpp,
+	src/blocxx/EnumerationException.hpp, src/blocxx/Exception.cpp,
+	src/blocxx/Exception.hpp, src/blocxx/ExceptionIds.hpp,
+	src/blocxx/Exec.cpp, src/blocxx/Exec.hpp, src/blocxx/File.hpp,
+	src/blocxx/FileAppender.cpp, src/blocxx/FileAppender.hpp,
+	src/blocxx/FileSystem.hpp, src/blocxx/Format.cpp,
+	src/blocxx/Format.hpp, src/blocxx/FuncNamePrinter.hpp,
+	src/blocxx/GetPass.cpp, src/blocxx/GetPass.hpp,
+	src/blocxx/HashMap.hpp, src/blocxx/HashMultiMap.hpp,
+	src/blocxx/IOException.cpp, src/blocxx/IOException.hpp,
+	src/blocxx/IOIFC.cpp, src/blocxx/IOIFC.hpp,
+	src/blocxx/IOIFCStreamBuffer.cpp, src/blocxx/IOIFCStreamBuffer.hpp,
+	src/blocxx/IntrusiveCountableBase.cpp,
+	src/blocxx/IntrusiveCountableBase.hpp,
+	src/blocxx/IntrusiveReference.hpp,
+	src/blocxx/IstreamBufIterator.hpp, src/blocxx/List.hpp,
+	src/blocxx/LogAppender.cpp, src/blocxx/LogAppender.hpp,
+	src/blocxx/LogLevel.hpp, src/blocxx/LogMessage.hpp,
+	src/blocxx/LogMessagePatternFormatter.cpp,
+	src/blocxx/LogMessagePatternFormatter.hpp, src/blocxx/Logger.cpp,
+	src/blocxx/Logger.hpp, src/blocxx/LoggerImpls.cpp,
+	src/blocxx/MD5.cpp, src/blocxx/MD5.hpp, src/blocxx/Makefile.am,
+	src/blocxx/Map.hpp, src/blocxx/MemTracer.cpp,
+	src/blocxx/MemTracer.hpp, src/blocxx/Mutex.cpp,
+	src/blocxx/Mutex.hpp, src/blocxx/MutexImpl.cpp,
+	src/blocxx/MutexImpl.hpp, src/blocxx/MutexLock.hpp,
+	src/blocxx/NULLValueException.cpp,
+	src/blocxx/NULLValueException.hpp, src/blocxx/NetworkTypes.hpp,
+	src/blocxx/NonRecursiveMutex.cpp, src/blocxx/NonRecursiveMutex.hpp,
+	src/blocxx/NonRecursiveMutexImpl.cpp,
+	src/blocxx/NonRecursiveMutexImpl.hpp,
+	src/blocxx/NonRecursiveMutexLock.hpp, src/blocxx/NullAppender.cpp,
+	src/blocxx/NullAppender.hpp, src/blocxx/NullLogger.cpp,
+	src/blocxx/NullLogger.hpp, src/blocxx/NwIface.cpp,
+	src/blocxx/NwIface.hpp, src/blocxx/OutOfBoundsException.cpp,
+	src/blocxx/PosixFile.cpp, src/blocxx/PosixFileSystem.cpp,
+	src/blocxx/PosixUnnamedPipe.cpp, src/blocxx/PosixUnnamedPipe.hpp,
+	src/blocxx/RWLocker.cpp, src/blocxx/RWLocker.hpp,
+	src/blocxx/RandomNumber.cpp, src/blocxx/RandomNumber.hpp,
+	src/blocxx/RefCount.hpp, src/blocxx/Reference.hpp,
+	src/blocxx/ReferenceBase.cpp, src/blocxx/ReferenceBase.hpp,
+	src/blocxx/Runnable.cpp, src/blocxx/Runnable.hpp,
+	src/blocxx/SSLCtxMgr.cpp, src/blocxx/SSLCtxMgr.hpp,
+	src/blocxx/SSLException.cpp, src/blocxx/SSLException.hpp,
+	src/blocxx/SSLSocketImpl.cpp, src/blocxx/SSLSocketImpl.hpp,
+	src/blocxx/Select.cpp, src/blocxx/Select.hpp,
+	src/blocxx/SelectEngine.cpp, src/blocxx/SelectEngine.hpp,
+	src/blocxx/SelectableCallbackIFC.cpp,
+	src/blocxx/SelectableCallbackIFC.hpp, src/blocxx/SelectableIFC.cpp,
+	src/blocxx/SelectableIFC.hpp, src/blocxx/Semaphore.hpp,
+	src/blocxx/ServerSocket.cpp, src/blocxx/ServerSocket.hpp,
+	src/blocxx/ServerSocketImpl.cpp, src/blocxx/ServerSocketImpl.hpp,
+	src/blocxx/SharedLibrary.cpp, src/blocxx/SharedLibrary.hpp,
+	src/blocxx/SharedLibraryException.cpp,
+	src/blocxx/SharedLibraryException.hpp,
+	src/blocxx/SharedLibraryLoader.cpp,
+	src/blocxx/SharedLibraryLoader.hpp,
+	src/blocxx/SharedLibraryReference.hpp, src/blocxx/SignalScope.hpp,
+	src/blocxx/Socket.cpp, src/blocxx/Socket.hpp,
+	src/blocxx/SocketAddress.cpp, src/blocxx/SocketAddress.hpp,
+	src/blocxx/SocketBaseImpl.cpp, src/blocxx/SocketBaseImpl.hpp,
+	src/blocxx/SocketException.hpp, src/blocxx/SocketFlags.hpp,
+	src/blocxx/SocketImpl.cpp, src/blocxx/SocketImpl.hpp,
+	src/blocxx/SocketStreamBuffer.cpp,
+	src/blocxx/SocketStreamBuffer.hpp, src/blocxx/SocketUtils.cpp,
+	src/blocxx/SocketUtils.hpp, src/blocxx/SortedVectorMap.hpp,
+	src/blocxx/SortedVectorSet.hpp, src/blocxx/Stack.hpp,
+	src/blocxx/StackTrace.cpp, src/blocxx/StackTrace.hpp,
+	src/blocxx/StrictWeakOrdering.hpp, src/blocxx/String.cpp,
+	src/blocxx/String.hpp, src/blocxx/StringBuffer.cpp,
+	src/blocxx/StringBuffer.hpp, src/blocxx/StringEnumeration.hpp,
+	src/blocxx/StringStream.cpp, src/blocxx/StringStream.hpp,
+	src/blocxx/SyslogAppender.cpp, src/blocxx/SyslogAppender.hpp,
+	src/blocxx/System.cpp, src/blocxx/System.hpp,
+	src/blocxx/TempFileEnumerationImplBase.cpp,
+	src/blocxx/TempFileEnumerationImplBase.hpp,
+	src/blocxx/TempFileStream.cpp, src/blocxx/TempFileStream.hpp,
+	src/blocxx/Thread.cpp, src/blocxx/Thread.hpp,
+	src/blocxx/ThreadBarrier.cpp, src/blocxx/ThreadBarrier.hpp,
+	src/blocxx/ThreadCancelledException.cpp,
+	src/blocxx/ThreadCancelledException.hpp,
+	src/blocxx/ThreadCounter.cpp, src/blocxx/ThreadCounter.hpp,
+	src/blocxx/ThreadDoneCallback.cpp,
+	src/blocxx/ThreadDoneCallback.hpp, src/blocxx/ThreadImpl.cpp,
+	src/blocxx/ThreadImpl.hpp, src/blocxx/ThreadOnce.cpp,
+	src/blocxx/ThreadOnce.hpp, src/blocxx/ThreadPool.cpp,
+	src/blocxx/ThreadPool.hpp, src/blocxx/ThreadTypes.hpp,
+	src/blocxx/TimeoutException.cpp, src/blocxx/TimeoutException.hpp,
+	src/blocxx/TmpFile.cpp, src/blocxx/TmpFile.hpp,
+	src/blocxx/Types.hpp, src/blocxx/UTF8Utils.cpp,
+	src/blocxx/UTF8Utils.hpp,
+	src/blocxx/UTF8UtilscompareToIgnoreCase.cpp, src/blocxx/UUID.cpp,
+	src/blocxx/UUID.hpp, src/blocxx/UnnamedPipe.cpp,
+	src/blocxx/UnnamedPipe.hpp, src/blocxx/UserUtils.cpp,
+	src/blocxx/UserUtils.hpp, src/blocxx/Win32SocketBaseImpl.cpp,
+	src/blocxx/dlSharedLibrary.cpp, src/blocxx/dlSharedLibrary.hpp,
+	src/blocxx/dlSharedLibraryLoader.cpp,
+	src/blocxx/dlSharedLibraryLoader.hpp,
+	src/blocxx/dyldSharedLibrary.cpp, src/blocxx/dyldSharedLibrary.hpp,
+	src/blocxx/dyldSharedLibraryLoader.cpp,
+	src/blocxx/dyldSharedLibraryLoader.hpp,
+	src/blocxx/shlSharedLibrary.cpp, src/blocxx/shlSharedLibrary.hpp,
+	src/blocxx/shlSharedLibraryLoader.cpp,
+	src/blocxx/shlSharedLibraryLoader.hpp, src/blocxx/vector.hpp,
+	test/.cvsignore, test/Makefile.am, test/CppUnit/.cvsignore,
+	test/CppUnit/CppUnitException.cpp,
+	test/CppUnit/CppUnitException.hpp, test/CppUnit/Guards.hpp,
+	test/CppUnit/Makefile.am, test/CppUnit/Test.hpp,
+	test/CppUnit/TestCaller.hpp, test/CppUnit/TestCase.cpp,
+	test/CppUnit/TestCase.hpp, test/CppUnit/TestFailure.cpp,
+	test/CppUnit/TestFailure.hpp, test/CppUnit/TestResult.cpp,
+	test/CppUnit/TestResult.hpp, test/CppUnit/TestRunner.cpp,
+	test/CppUnit/TestRunner.hpp, test/CppUnit/TestSuite.cpp,
+	test/CppUnit/TestSuite.hpp, test/CppUnit/TextTestResult.cpp,
+	test/CppUnit/TextTestResult.hpp, test/unit/.cvsignore,
+	test/unit/BinarySerializationTestCases.cpp,
+	test/unit/BinarySerializationTestCases.hpp,
+	test/unit/COWIntrusiveReferenceTestCases.cpp,
+	test/unit/COWIntrusiveReferenceTestCases.hpp,
+	test/unit/CmdLineParserTestCases.cpp,
+	test/unit/CmdLineParserTestCases.hpp,
+	test/unit/DateTimeTestCases.cpp, test/unit/DateTimeTestCases.hpp,
+	test/unit/EnumerationTestCases.cpp,
+	test/unit/EnumerationTestCases.hpp,
+	test/unit/ExceptionTestCases.cpp, test/unit/ExceptionTestCases.hpp,
+	test/unit/ExecTestCases.cpp, test/unit/ExecTestCases.hpp,
+	test/unit/FileSystemTestCases.cpp,
+	test/unit/FileSystemTestCases.hpp, test/unit/FormatTestCases.cpp,
+	test/unit/FormatTestCases.hpp, test/unit/GenericTestCases.cpp.tmpl,
+	test/unit/GenericTestCases.hpp.tmpl,
+	test/unit/InetAddressTestCases.cpp,
+	test/unit/InetAddressTestCases.hpp, test/unit/LoggerTestCases.cpp,
+	test/unit/LoggerTestCases.hpp, test/unit/MD5TestCases.cpp,
+	test/unit/MD5TestCases.hpp, test/unit/Makefile.am,
+	test/unit/MemTracerTest.cpp, test/unit/MemTracerTestCases.cpp,
+	test/unit/MemTracerTestCases.hpp, test/unit/MutexTestCases.cpp,
+	test/unit/MutexTestCases.hpp, test/unit/RWLockerTestCases.cpp,
+	test/unit/RWLockerTestCases.hpp,
+	test/unit/RandomNumberTestCases.cpp,
+	test/unit/RandomNumberTestCases.hpp,
+	test/unit/ReferenceTestCases.cpp, test/unit/ReferenceTestCases.hpp,
+	test/unit/SocketUtilsTestCases.cpp,
+	test/unit/SocketUtilsTestCases.hpp,
+	test/unit/StackTraceTestCases.cpp,
+	test/unit/StackTraceTestCases.hpp,
+	test/unit/StringStreamTestCases.cpp,
+	test/unit/StringStreamTestCases.hpp, test/unit/StringTestCases.cpp,
+	test/unit/StringTestCases.hpp,
+	test/unit/ThreadBarrierTestCases.cpp,
+	test/unit/ThreadBarrierTestCases.hpp,
+	test/unit/ThreadPoolTestCases.cpp,
+	test/unit/ThreadPoolTestCases.hpp, test/unit/ThreadTestCases.cpp,
+	test/unit/ThreadTestCases.hpp, test/unit/UTF8UtilsTestCases.cpp,
+	test/unit/UTF8UtilsTestCases.hpp, test/unit/UUIDTestCases.cpp,
+	test/unit/UUIDTestCases.hpp, test/unit/UnitMain.cpp,
+	test/unit/exitWithSignal.cpp, test/unit/newtest.sh,
+	test/unit/run_make_check.sh:
+
+	Initial revision
+
+
