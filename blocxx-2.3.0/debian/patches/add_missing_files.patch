@@ -1,0 +1,471 @@
+Description: add missing files
+ Add some files which are needed but missing in upstream release-tarball.
+ .
+ add: test/unit/CryptographicRandomNumberTestCases.hpp
+ add: test/unit/IPCMutexTestCases.hpp
+ add: test/unit/RandomNumberTestCases.hpp
+ add: test/unit/TmUtils_normTmTestCases.hpp
+ add: test/unit/TmUtils_timeGmTestCases.hpp
+ add: test/unit/UserUtilsTestCases.hpp
+ add: test/unit/set_test_libpath.sh.in
+ .
+ libblocxx (2.3.0~svn544-1) unstable; urgency=low
+ .
+   * Initial release (Closes: #647639)
+Author: Björn Esser <bjoern.esser@googlemail.com>
+Forwarded: http://sourceforge.net/mailarchive/message.php?msg_id=29044741
+Last-Update: <2012-03-27>
+
+--- /dev/null
++++ libblocxx-2.3.0~svn544/test/unit/CryptographicRandomNumberTestCases.hpp
+@@ -0,0 +1,57 @@
++/*******************************************************************************
++* Copyright (C) 2005, Quest Software, Inc. All rights reserved.
++* Copyright (C) 2006, Novell, Inc. All rights reserved.
++*
++* Redistribution and use in source and binary forms, with or without
++* modification, are permitted provided that the following conditions are met:
++*
++*     * Redistributions of source code must retain the above copyright notice,
++*       this list of conditions and the following disclaimer.
++*     * Redistributions in binary form must reproduce the above copyright
++*       notice, this list of conditions and the following disclaimer in the
++*       documentation and/or other materials provided with the distribution.
++*     * Neither the name of
++*       Quest Software, Inc.,
++*       nor Novell, Inc.,
++*       nor the names of its contributors or employees may be used to
++*       endorse or promote products derived from this software without
++*       specific prior written permission.
++*
++* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
++* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
++* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
++* ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
++* LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
++* CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
++* SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
++* INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
++* CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
++* ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
++* POSSIBILITY OF SUCH DAMAGE.
++*******************************************************************************/
++
++
++#ifndef BLOCXX_CRYPTOGRAPHIC_RANDOM_NUMBER_TEST_CASES_HPP_INCLUDE_GUARD_
++#define BLOCXX_CRYPTOGRAPHIC_RANDOM_NUMBER_TEST_CASES_HPP_INCLUDE_GUARD_
++
++#include "blocxx/BLOCXX_config.h"
++#include "TestCase.hpp"
++
++class CryptographicRandomNumberTestCases : public TestCase
++{
++public:
++	CryptographicRandomNumberTestCases( const char* name )
++		: TestCase( name ) {}
++
++	void setUp();
++	void tearDown();
++	static Test *suite();
++
++private:
++	// test methods
++	void testRandomNumbers();
++	void doTestRange(int low, int high);
++};
++
++#endif
++
+
+--- /dev/null
++++ libblocxx-2.3.0~svn544/test/unit/IPCMutexTestCases.hpp
+@@ -0,0 +1,53 @@
++/*******************************************************************************
++* Copyright (C) 2001 Quest Software, Inc. All rights reserved.
++*
++* Redistribution and use in source and binary forms, with or without
++* modification, are permitted provided that the following conditions are met:
++*
++*  - Redistributions of source code must retain the above copyright notice,
++*    this list of conditions and the following disclaimer.
++*
++*  - Redistributions in binary form must reproduce the above copyright notice,
++*    this list of conditions and the following disclaimer in the documentation
++*    and/or other materials provided with the distribution.
++*
++*  - Neither the name of Quest Software, Inc. nor the names of its
++*    contributors may be used to endorse or promote products derived from this
++*    software without specific prior written permission.
++*
++* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS ``AS IS''
++* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
++* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
++* ARE DISCLAIMED. IN NO EVENT SHALL Quest Software, Inc. OR THE CONTRIBUTORS
++* BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
++* CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
++* SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
++* INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
++* CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
++* ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
++* POSSIBILITY OF SUCH DAMAGE.
++*******************************************************************************/
++
++#ifndef BLOCXX_IPC_MUTEX_TEST_CASES_HPP_INCLUDE_GUARD_
++#define BLOCXX_IPC_MUTEX_TEST_CASES_HPP_INCLUDE_GUARD_
++
++#include "blocxx/BLOCXX_config.h"
++#include "TestCase.hpp"
++
++class IPCMutexTestCases : public TestCase
++{
++public:
++	IPCMutexTestCases( const char* name )
++		: TestCase( name ) {}
++
++	void setUp();
++	void tearDown();
++	static Test *suite();
++
++private:
++	// test methods
++	void testSomething();
++};
++
++#endif
++
+
+--- /dev/null
++++ libblocxx-2.3.0~svn544/test/unit/RandomNumberTestCases.hpp
+@@ -0,0 +1,63 @@
++/*******************************************************************************
++* Copyright (C) 2005, Quest Software, Inc. All rights reserved.
++* Copyright (C) 2006, Novell, Inc. All rights reserved.
++*
++* Redistribution and use in source and binary forms, with or without
++* modification, are permitted provided that the following conditions are met:
++*
++*     * Redistributions of source code must retain the above copyright notice,
++*       this list of conditions and the following disclaimer.
++*     * Redistributions in binary form must reproduce the above copyright
++*       notice, this list of conditions and the following disclaimer in the
++*       documentation and/or other materials provided with the distribution.
++*     * Neither the name of
++*       Quest Software, Inc.,
++*       nor Novell, Inc.,
++*       nor the names of its contributors or employees may be used to
++*       endorse or promote products derived from this software without
++*       specific prior written permission.
++*
++* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
++* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
++* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
++* ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
++* LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
++* CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
++* SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
++* INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
++* CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
++* ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
++* POSSIBILITY OF SUCH DAMAGE.
++*******************************************************************************/
++
++
++/**
++ * @author Dan Nuffer
++ */
++
++
++#ifndef BLOCXX_RANDOM_NUMBER_TEST_CASES_HPP_INCLUDE_GUARD_
++#define BLOCXX_RANDOM_NUMBER_TEST_CASES_HPP_INCLUDE_GUARD_
++
++#include "blocxx/BLOCXX_config.h"
++#include "TestCase.hpp"
++
++class RandomNumberTestCases : public TestCase
++{
++public:
++	RandomNumberTestCases( const char* name )
++		: TestCase( name ) {}
++
++	void setUp();
++	void tearDown();
++	static Test *suite();
++
++private:
++	// test methods
++	void testRandomNumbers();
++	void doTestRange(int low, int high);
++	void testMersenneTwister();
++};
++
++#endif
++
+
+--- /dev/null
++++ libblocxx-2.3.0~svn544/test/unit/TmUtils_normTmTestCases.hpp
+@@ -0,0 +1,60 @@
++/*******************************************************************************
++* Copyright (C) 2005, Quest Software, Inc. All rights reserved.
++* Copyright (C) 2006, Novell, Inc. All rights reserved.
++*
++* Redistribution and use in source and binary forms, with or without
++* modification, are permitted provided that the following conditions are met:
++*
++*     * Redistributions of source code must retain the above copyright notice,
++*       this list of conditions and the following disclaimer.
++*     * Redistributions in binary form must reproduce the above copyright
++*       notice, this list of conditions and the following disclaimer in the
++*       documentation and/or other materials provided with the distribution.
++*     * Neither the name of
++*       Quest Software, Inc.,
++*       nor Novell, Inc.,
++*       nor the names of its contributors or employees may be used to
++*       endorse or promote products derived from this software without
++*       specific prior written permission.
++*
++* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
++* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
++* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
++* ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
++* LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
++* CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
++* SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
++* INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
++* CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
++* ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
++* POSSIBILITY OF SUCH DAMAGE.
++*******************************************************************************/
++
++#ifndef BLOCXX_TM_UTILS_NORM_TM_TEST_CASES_HPP_INCLUDE_GUARD_
++#define BLOCXX_TM_UTILS_NORM_TM_TEST_CASES_HPP_INCLUDE_GUARD_
++
++#include "blocxx/BLOCXX_config.h"
++#include "TestCase.hpp"
++
++class TmUtils_normTmTestCases : public TestCase
++{
++public:
++	TmUtils_normTmTestCases( const char* name )
++		: TestCase( name ) {}
++
++	virtual ~TmUtils_normTmTestCases();
++
++	void setUp();
++	void tearDown();
++	static Test *suite();
++
++private:
++	void TmUtils_normTmTestCase(char const * input, char const * output);
++	void negativeTestCase(int, int, int, int, int, int, int, int, int, int, int, int);
++	// test methods
++	void testAll();
++	void testNegative();
++};
++
++#endif
++
+
+--- /dev/null
++++ libblocxx-2.3.0~svn544/test/unit/TmUtils_timeGmTestCases.hpp
+@@ -0,0 +1,61 @@
++/*******************************************************************************
++* Copyright (C) 2005, Quest Software, Inc. All rights reserved.
++* Copyright (C) 2006, Novell, Inc. All rights reserved.
++*
++* Redistribution and use in source and binary forms, with or without
++* modification, are permitted provided that the following conditions are met:
++*
++*     * Redistributions of source code must retain the above copyright notice,
++*       this list of conditions and the following disclaimer.
++*     * Redistributions in binary form must reproduce the above copyright
++*       notice, this list of conditions and the following disclaimer in the
++*       documentation and/or other materials provided with the distribution.
++*     * Neither the name of
++*       Quest Software, Inc.,
++*       nor Novell, Inc.,
++*       nor the names of its contributors or employees may be used to
++*       endorse or promote products derived from this software without
++*       specific prior written permission.
++*
++* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
++* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
++* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
++* ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
++* LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
++* CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
++* SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
++* INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
++* CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
++* ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
++* POSSIBILITY OF SUCH DAMAGE.
++*******************************************************************************/
++
++#ifndef BLOCXX_TM_UTILS_TIME_GM_TEST_CASES_HPP_INCLUDE_GUARD_
++#define BLOCXX_TM_UTILS_TIME_GM_TEST_CASES_HPP_INCLUDE_GUARD_
++
++#include "blocxx/BLOCXX_config.h"
++#include "TestCase.hpp"
++
++class TmUtils_timeGmTestCases : public TestCase
++{
++public:
++	TmUtils_timeGmTestCases( const char* name )
++		: TestCase( name ) {}
++
++	virtual ~TmUtils_timeGmTestCases();
++
++	void setUp();
++	void tearDown();
++	static Test *suite();
++
++private:
++	void timeGmTestCase(char const *, time_t);
++	void errorCase(int, int, int, int, int, int);
++
++	// test methods
++	void testAll();
++	void testErrors();
++};
++
++#endif
++
+
+--- /dev/null
++++ libblocxx-2.3.0~svn544/test/unit/UserUtilsTestCases.hpp
+@@ -0,0 +1,74 @@
++/*******************************************************************************
++* Copyright (C) 2009, Quest Software, Inc. All rights reserved.
++* Copyright (C) 2006, Novell, Inc. All rights reserved.
++*
++* Redistribution and use in source and binary forms, with or without
++* modification, are permitted provided that the following conditions are met:
++*
++*     * Redistributions of source code must retain the above copyright notice,
++*       this list of conditions and the following disclaimer.
++*     * Redistributions in binary form must reproduce the above copyright
++*       notice, this list of conditions and the following disclaimer in the
++*       documentation and/or other materials provided with the distribution.
++*     * Neither the name of
++*       Quest Software, Inc.,
++*       nor Novell, Inc.,
++*       nor the names of its contributors or employees may be used to
++*       endorse or promote products derived from this software without
++*       specific prior written permission.
++*
++* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
++* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
++* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
++* ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
++* LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
++* CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
++* SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
++* INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
++* CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
++* ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
++* POSSIBILITY OF SUCH DAMAGE.
++*******************************************************************************/
++
++
++/**
++ * @author Joel Smith
++ */
++
++
++#ifndef BLOCXX_USER_UTILS_TEST_CASES_HPP_INCLUDE_GUARD_
++#define BLOCXX_USER_UTILS_TEST_CASES_HPP_INCLUDE_GUARD_
++
++#include "blocxx/BLOCXX_config.h"
++#include "TestCase.hpp"
++#include "blocxx/String.hpp"
++#include "blocxx/Map.hpp"
++#include "blocxx/UserUtils.hpp"
++
++class UserUtilsTestCases : public TestCase
++{
++public:
++	UserUtilsTestCases( const char* name )
++		: TestCase( name ) {}
++
++	void setUp();
++	void tearDown();
++	static Test *suite();
++
++private:
++	// test methods
++	void testGetEffectiveUserId();
++	void testGetEffectiveGroupId();
++	void testGetCurrentUserName();
++	void testGetCurrentGroupName();
++	void testGetUserName();
++	void testGetGroupName();
++	void testGetUserId();
++	void testGetGroupId();
++	typedef blocxx::Map<blocxx::UserId, blocxx::String> UserMap;
++	typedef blocxx::Map<blocxx::GroupId, blocxx::String> GroupMap;
++	UserMap users;
++	GroupMap groups;
++};
++
++#endif
+
+--- /dev/null
++++ libblocxx-2.3.0~svn544/test/unit/set_test_libpath.sh.in
+@@ -0,0 +1,57 @@
++#!/bin/sh
++
++SSL_LIB_DIR=@SSL_LIB_DIR@
++PCRE_LIB_DIR=@PCRE_LIB_DIR@
++BLOCXX_COMPILER_LIBDIR=@BLOCXX_COMPILER_LIBDIR@
++
++locate_self()
++{
++	if [ x${PATH_TO_SELF:+set} = xset ]; then
++		return
++	fi
++
++	PATH_TO_SELF=
++
++	LBS_SCRIPT_FILE=`basename "$0"`
++	LBS_SCRIPT_BASE_DIR=`dirname "$0"`
++	LBS_WHICH_PATH=`which "$0" 2>/dev/null || true`
++	LBS_WHICH_BASE_DIR=`dirname "${LBS_WHICH_PATH}"`
++	LBS_PWD=`pwd`
++
++	for absolutepath in \
++		"${LBS_PWD}/${LBS_SCRIPT_BASE_DIR}" \
++		"${LBS_SCRIPT_BASE_DIR}" \
++		"${LBS_WHICH_BASE_DIR}" \
++		"${LBS_PWD}/${LBS_WHICH_BASE_DIR}"; do
++		if [ -f "${absolutepath}/${LBS_SCRIPT_FILE}" ]; then
++			PATH_TO_SELF="${absolutepath}"
++			break;
++		fi
++	done
++
++	if [ x${PATH_TO_SELF:+set} != xset ]; then
++		echo "I can't locate myself!  PWD=\"${LBS_PWD}\", \$0=$0"
++		return 1
++	fi
++	unset LBS_SCRIPT_FILE LBS_SCRIPT_BASE_DIR || true
++	unset LBS_WHICH_PATH LBS_WHICH_BASE_DIR LBS_PWD || true
++	return 0
++}
++
++locate_self || exit $?
++
++# The current directory needs to be in the path so dlopen() can find the test library for the LazyGlobal test.
++LD_LIBRARY_PATH="${PATH_TO_SELF}:${PATH_TO_SELF}/../../src/blocxx:${PATH_TO_SELF}/../../src/blocxx_test${SSL_LIB_DIR:+:}${SSL_LIB_DIR:-}${PCRE_LIB_DIR:+:}${PCRE_LIB_DIR:-}${BLOCXX_COMPILER_LIBDIR:+:}${BLOCXX_COMPILER_LIBDIR:-}${LD_LIBRARY_PATH:+:}${LD_LIBRARY_PATH:-}"
++
++# AIX
++LIBPATH="$LD_LIBRARY_PATH:$LIBPATH"
++
++# HP-UX
++SHLIB_PATH="$LD_LIBRARY_PATH:$SHLIB_PATH"
++
++# DARWIN (OSX)
++DYLD_LIBRARY_PATH="$DYLD_LIBRARY_PATH:$LD_LIBRARY_PATH"
++
++export LD_LIBRARY_PATH LIBPATH SHLIB_PATH DYLD_LIBRARY_PATH
++
++exec "$@"
+\ No newline at end of file
