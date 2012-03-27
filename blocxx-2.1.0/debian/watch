@@ -1,4 +1,0 @@
-version=3
-opts="filenamemangle=s/http.*blocxx-/libblocxx-/,uversionmangle=s/\.\?rev.*//" \
-https://build.opensuse.org/package/files?package=blocxx&project=openSUSE:Factory \
-https://api.opensuse.org:443/public/source/openSUSE:Factory/blocxx/blocxx-(.*)\.tar\.bz2(.*)

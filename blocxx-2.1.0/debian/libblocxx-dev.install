@@ -1,5 +1,0 @@
-usr/include/blocxx/*
-usr/lib/libblocxx.a
-usr/lib/libblocxx.so
-usr/lib/pkgconfig/*
-usr/share/aclocal/*.m4
