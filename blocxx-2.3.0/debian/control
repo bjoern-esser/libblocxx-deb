@@ -1,7 +1,7 @@
 Source: libblocxx
 Priority: extra
 Maintainer: Björn Esser <bjoern.esser@googlemail.com>
-Build-Depends: automake1.9,
+Build-Depends: automake,
                autotools-dev,
                bc,
                debhelper (>= 8.0.0),
@@ -12,7 +12,8 @@ Build-Depends: automake1.9,
                m4,
                mawk,
                mime-support,
-               pkg-config
+               pkg-config,
+               re2c
 Standards-Version: 3.9.3
 Section: libs
 Homepage: http://blocxx.sf.net/
