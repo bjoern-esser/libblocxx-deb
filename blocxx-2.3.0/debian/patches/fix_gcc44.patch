@@ -1,0 +1,60 @@
+From: unknown
+Subject: fix build on GCC 4.4+ by adding cstdio
+
+* src/blocxx/BaseStreamBuffer.cpp
+* src/blocxx/DataStreams.cpp
+* src/blocxx/IstreamBufIterator.hpp
+* src/blocxx/StringStream.hpp:
+* src/blocxx/TempFileStream.cpp
+
+Origin: upstream, https://api.opensuse.org/public/source/openSUSE:Factory/blocxx/blocxx-2.1.0-gcc44.dif?rev=1659906e4d6e276a8c7ee6ceefe976eb&
+--- a/src/blocxx/BaseStreamBuffer.cpp
++++ b/src/blocxx/BaseStreamBuffer.cpp
+@@ -43,6 +43,7 @@
+ #include "blocxx/Assertion.hpp"
+ #include <iostream> // for cerr
+ #include <cstring> // for memcpy
++#include <cstdio>
+ 
+ namespace BLOCXX_NAMESPACE
+ {
+--- a/src/blocxx/DataStreams.cpp
++++ b/src/blocxx/DataStreams.cpp
+@@ -40,6 +40,7 @@
+ #include "blocxx/Types.hpp"
+ #include "blocxx/DataStreams.hpp"
+ #include <cstring>
++#include <cstdio>
+ 
+ namespace BLOCXX_NAMESPACE
+ {
+--- a/src/blocxx/IstreamBufIterator.hpp
++++ b/src/blocxx/IstreamBufIterator.hpp
+@@ -43,6 +43,7 @@
+ #else
+ #include <iostream>
+ #endif
++#include <cstdio>
+ 
+ 
+ namespace BLOCXX_NAMESPACE
+--- a/src/blocxx/StringStream.hpp
++++ b/src/blocxx/StringStream.hpp
+@@ -52,6 +52,7 @@
+ #else
+ #include <streambuf.h>
+ #endif
++#include <cstdio>
+ 
+ namespace BLOCXX_NAMESPACE
+ {
+--- a/src/blocxx/TempFileStream.cpp
++++ b/src/blocxx/TempFileStream.cpp
+@@ -47,6 +47,7 @@
+ #include "blocxx/Assertion.hpp"
+ #include "blocxx/IOException.hpp"
+ #include <cstring>
++#include <cstdio>
+ 
+ namespace BLOCXX_NAMESPACE
+ {

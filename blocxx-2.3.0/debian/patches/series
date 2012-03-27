@@ -1,0 +1,9 @@
+pkgconfig.patch
+openssl.patch
+memorybarrier.patch
+std_ptrdiff.patch
+fix_gcc44.patch
+catch_gcc45_bug_is_pod.patch
+fix_dereferencing_type_punned_pointer_warning.patch
+fix_suggest_parentheses_warnings.patch
+std_numeric_limits.patch
