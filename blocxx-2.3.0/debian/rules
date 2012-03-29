@@ -17,7 +17,30 @@ override_dh_autoreconf:
 		depcomp \
 		missing \
 		mkinstalldirs \
-		test/unit/set_test_libpath.sh
+		test/unit/set_test_libpath.sh \
+		Makefile.in \
+		config.h.in \
+		configure \
+		doc/Makefile.in \
+		examples/Makefile.in \
+		examples/cmdLineParser/Makefile.in \
+		examples/collections/Makefile.in \
+		examples/iconv/Makefile.in \
+		examples/intrusiveRef/Makefile.in \
+		examples/loggers/Makefile.in \
+		examples/pcre/Makefile.in \
+		examples/regex/Makefile.in \
+		examples/sharedLibs/Makefile.in \
+		examples/threads/Makefile.in \
+		examples/utils/Makefile.in \
+		install-sh \
+		src/Makefile.in \
+		src/blocxx/BLOCXX_config.h \
+		src/blocxx/Makefile.in \
+		src/blocxx_test/CppUnit/Makefile.in \
+		src/blocxx_test/Makefile.in \
+		test/Makefile.in \
+		test/unit/Makefile.in
 	dh_autoreconf
 
 override_dh_auto_configure:
